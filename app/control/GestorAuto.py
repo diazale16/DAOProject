@@ -2,7 +2,7 @@
 
 # from app.entities.Auto import Auto
 # from app.control.DBManager import DBManager
-from ..boundary.Auto.AltaAuto import AltaAuto
+from ..boundary.Auto.AdministracionAuto import AltaAuto
 from ..entities.AutoModel import Auto
 from ..persistency.DBManager import DBManager
 from ..services.AutoService import AutoService

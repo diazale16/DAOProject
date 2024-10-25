@@ -1,4 +1,4 @@
-from ..boundary.Auto.AltaAuto import AltaAuto
+from ..boundary.Auto.AdministracionAuto import AltaAuto
 from ..entities.AutoModel import Auto
 from ..persistency.DBManager import DBManager
 
