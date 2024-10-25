@@ -9,10 +9,11 @@ from .VendedorModel import Vendedor
 class TipoServicio(Base):
     __tablename__ = 'tipos_servicios'
     id = Column(String(10), primary_key=True, default=lambda:uuid.uuid4().hex[:10])
-    fecha_venta = Column(Date, nullable=False)
-    auto = Column(String, ForeignKey('autos.id'), nullable=False)
-    cliente = Column(String, ForeignKey('clientes.id'), nullable=False)
-    vendedor = Column(Float, ForeignKey('vendedores.id'), nullable=False)
+    nombre = Column(String, nullable=False)
+    # fecha_venta = Column(Date, nullable=False)
+    # auto = Column(String, ForeignKey('autos.id'), nullable=False)
+    # cliente = Column(String, ForeignKey('clientes.id'), nullable=False)
+    # vendedor = Column(Float, ForeignKey('vendedores.id'), nullable=False)
 
     # Relación con la entidad Dirección
     servicio_relacion = relationship('Servicio', back_populates='tipo_servicio_relacion')

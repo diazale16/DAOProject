@@ -21,6 +21,10 @@ class DBManager:
         self.engine = create_engine(db_path)
         self.Session = sessionmaker(bind=self.engine)
 
+    def create_tables(self):
+        import entities
+        Base.metadata.create_all(self.engine)
+    
     def get_session(self):
         return self.Session()
 

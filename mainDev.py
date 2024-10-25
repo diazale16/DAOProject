@@ -2,6 +2,8 @@ from app.persistency.DBManager import DBManager
 from app.control.GestorAuto import GestorAuto
 
 def main():
+    db_manager = DBManager()
+    print(db_manager)
     # Inicializamos el AutoManager
     auto_manager = GestorAuto()
     # Datos de prueba

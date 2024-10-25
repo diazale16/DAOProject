@@ -10,7 +10,7 @@ class Cliente(Base):
     nombre = Column(String, nullable=False)
     apellido = Column(String, nullable=False)
     telefono = Column(Integer, nullable=False)
-    direccion = Column(Integer, ForeignKey('direcciones.id'))
+    direccion_id = Column(Integer, ForeignKey('direcciones.id'))
     
     # Relación con la entidad Dirección
     direccion_relacion = relationship('Direccion', back_populates='cliente_relacion')
