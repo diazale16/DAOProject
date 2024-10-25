@@ -1,0 +1,3 @@
+class Auto:
+    def __init__(self, vin, marca, modelo, año, precio, estado, cliente=None):
+        pass
