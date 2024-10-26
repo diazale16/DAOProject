@@ -14,8 +14,8 @@ class AutoService:
     def eliminar_auto(self, auto:Auto):
         self.db_manager.delete(auto)
     
-    def obtener_auto(self, auto:Auto):
-        return self.db_manager.get_by_id(Auto, auto.vin)
+    def obtener_auto(self, vin):
+        return self.db_manager.get_by_id(Auto, vin)
     
     def listar_autos(self):
         autos_source = self.db_manager.get_all(Auto) 

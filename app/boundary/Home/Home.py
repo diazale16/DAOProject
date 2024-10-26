@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from tkinter import ttk
-from ...control import Gestor, GestorAuto
+from ...control import GestorAuto
+from ..Auto.AdministracionAuto import AdministracionAuto
 
 class Home:
     def __init__(self):    
@@ -14,15 +15,14 @@ class Home:
         
     def initialize_widgets(self):
         self.adm_autos = ctk.CTkButton(self.root, text="Administrar Auto", command=self.adm_autos).pack(side="top", fill="x", padx=200, pady=20)
-        # self.adm_clientes = ctk.CTkButton(self.root, text="Administrar Clientes", command=self.adm_clientes).pack(side="left", fill="y", padx=10, pady=50)
-        # self.adm_ventas = ctk.CTkButton(self.root, text="Administrar Ventas", command=self.adm_ventas).pack(side="left", fill="y", padx=10, pady=50)
-        # self.adm_servicios = ctk.CTkButton(self.root, text="Administrar Servicios", command=self.adm_servicios).pack(side="left", fill="y", padx=10, pady=50)
+        self.adm_clientes = ctk.CTkButton(self.root, text="Administrar Clientes").pack(side="top", fill="x", padx=200, pady=20)
+        self.adm_ventas = ctk.CTkButton(self.root, text="Administrar Ventas").pack(side="top", fill="x", padx=200, pady=20)
+        self.adm_servicios = ctk.CTkButton(self.root, text="Administrar Servicios").pack(side="top", fill="x", padx=200, pady=20)
     
     def show_home(self):
         self.root.mainloop()
     
     def adm_autos(self):
-        gestor_alta = GestorAuto.GestorAuto()
-        self.root.destroy()
-        gestor_alta.registrar_auto()
+        adm_autos = AdministracionAuto()
+        adm_autos.show()
         
