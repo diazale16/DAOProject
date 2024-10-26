@@ -14,7 +14,7 @@ class Cliente(Base):
     
     # Relación con la entidad Dirección
     direccion_relacion = relationship('Direccion', back_populates='cliente_relacion')
-    auto_relacion = relationship('Auto', back_populates='cliente_relacion')
+    auto_relacion = relationship('Auto', back_populates='cliente_relacion', lazy="joined")
     venta_relacion = relationship('Venta', back_populates='cliente_relacion')
 
 

@@ -91,29 +91,31 @@ vin_codes = [
     "KM8JT3AB6EU123456",
 ]
 
-# Servicios
-auto_service = AutoService.AutoService()
-estado_service = EstadoService.EstadoService()
+def main():
+    # Servicios
+    auto_service = AutoService.AutoService()
+    estado_service = EstadoService.EstadoService()
 
-# Auto
-sup_limit = len(vin_codes)
-for i in range(sup_limit):
-    rand1 = random.randint(0, sup_limit-1)
-    rand2 = random.randint(0, 2)
-    estado = EstadoModel.Estado(nombre="Nuevo" if i%2 == 0 else "Usado")
-    estado_service.registrar_estado(estado)
-    
-    auto = AutoModel.Auto(
-        vin=vin_codes[i],
-        marca=marca[rand1],
-        modelo=marca_modelo[marca[rand1]][rand2],
-        año=random.randint(1970, 2023),
-        precio=random.randrange(5000000, 20000000, 1),
-        estado_id=estado.id,
-        cliente_id=None,
-    )
-    auto_service.registrar_auto(auto)
-    
-listado_autos = auto_service.listar_autos()
-print()
+    # Auto
+    sup_limit = len(vin_codes)
+    for i in range(sup_limit):
+        rand1 = random.randint(0, sup_limit-1)
+        rand2 = random.randint(0, 2)
+        estado = EstadoModel.Estado(nombre="Nuevo" if i%2 == 0 else "Usado")
+        estado_service.registrar_estado(estado)
+        
+        auto = AutoModel.Auto(
+            vin=vin_codes[i],
+            marca=marca[rand1],
+            modelo=marca_modelo[marca[rand1]][rand2],
+            año=random.randint(1970, 2023),
+            precio=random.randrange(5000000, 20000000, 1),
+            estado_id=estado.id,
+            cliente_id=None,
+        )
+        auto_service.registrar_auto(auto)
+        
+    listado_autos = auto_service.listar_autos()
+    print()
 
+main()

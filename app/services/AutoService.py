@@ -1,4 +1,3 @@
-from ..boundary.Auto.AdministracionAuto import AltaAuto
 from ..entities.AutoModel import Auto
 from ..persistency.DBManager import DBManager
 
@@ -6,11 +5,7 @@ class AutoService:
     def __init__(self):
         self.db_manager = DBManager()
     
-    # def registrar_auto(self):
     def registrar_auto(self, auto:Auto):
-        # interfazAlta = AltaAuto()
-        # vin, marca, modelo, año, precio, estado, cliente = interfazAlta.alta()
-        # auto = Auto(vin=vin, marca=marca, modelo=modelo, año=año, precio=precio, estado=estado, cliente=cliente)
         self.db_manager.register(auto)
         
     def modificar_auto(self, auto:Auto):
@@ -23,4 +18,13 @@ class AutoService:
         return self.db_manager.get_by_id(Auto, auto.vin)
     
     def listar_autos(self):
-        return self.db_manager.get_all(Auto)
+        autos_source = self.db_manager.get_all(Auto) 
+        datos_autos = []
+        for auto in autos_source:
+            if isinstance(auto, Auto):
+                if not (auto.cliente_relacion):
+                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, None)
+                else:
+                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, f"{auto.cliente_relacion.nombre} {auto.cliente_relacion.apellido}")
+                datos_autos.append(tupla)
+        return datos_autos

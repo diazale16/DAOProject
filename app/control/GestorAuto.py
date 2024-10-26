@@ -2,21 +2,28 @@
 
 # from app.entities.Auto import Auto
 # from app.control.DBManager import DBManager
-from ..boundary.Auto.AdministracionAuto import AltaAuto
+from ..boundary.Auto.AdministracionAuto import AdministracionAuto
 from ..entities.AutoModel import Auto
 from ..persistency.DBManager import DBManager
 from ..services.AutoService import AutoService
-
-class GestorAuto:
+from . import Gestor
+class GestorAuto():
     def __init__(self):
-        pass
-        # self.db_manager = DBManager()
+        self.auto_service = AutoService()
 
-    def registrar_auto(self):    
-            
-        auto_service = AutoService()
-        auto_service.registrar_auto()
+    def registrar_auto(self):
+        self.listar_autos()        
+        vin, marca, modelo, año, precio, estado, cliente = self.adm_autos.alta()
+        auto = Auto(vin=vin, marca=marca, modelo=modelo, año=año, precio=precio, estado=estado, cliente=cliente)    
+        self.auto_service.registrar_auto(auto)
+        self.home()
         print("añadidoo")
-        # session.add(auto)
-        # session.commit()
-        # session.close()
+        
+    def home(self):
+        gestor = Gestor.Gestor()
+        gestor.home()
+    
+    def listar_autos(self):
+        autos = self.auto_service.listar_autos()
+        self.adm_autos = AdministracionAuto(autos)
+        
