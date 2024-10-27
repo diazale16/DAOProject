@@ -8,8 +8,15 @@ class Home:
         ctk.set_appearance_mode("dark")
         self.ventana = ctk.CTk()
         
-        self.ventana.geometry(f"1280x720")
-        self.ventana.attributes("-zoomed", True)
+        # Establece la ventana en pantalla completa
+        self.ventana.attributes("-fullscreen", True)
+        
+        # Opción para salir de pantalla completa
+        self.ventana.bind("<Escape>", self.salir_fullscreen)
+
+        # Vincula el evento de cierre de la ventana al método salir
+        self.ventana.protocol("WM_DELETE_WINDOW", self.salir)
+        
         self.initialize_widgets()
         
     def initialize_widgets(self):
@@ -26,8 +33,11 @@ class Home:
         import sys
         sys.exit()
     
+    def salir_fullscreen(self, event=None):
+        self.ventana.attributes("-fullscreen", False)
+        self.ventana.geometry("1280x720")  # Opcionalmente restablece el tamaño de la ventana
+    
     def adm_autos(self):
         self.ventana.withdraw()
         adm_autos = AdministracionAuto(self)
         adm_autos.show()
-        
