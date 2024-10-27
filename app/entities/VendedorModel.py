@@ -6,7 +6,7 @@ from .ClienteModel import Cliente
 
 class Vendedor(Base):
     __tablename__ = 'vendedores'
-    id = Column(String(10), primary_key=True, default=lambda:uuid.uuid4().hex[:10])
+    id = Column(String(10), primary_key=True, default=lambda:uuid.uuid4().hex[:10].upper())
     nombre = Column(String, nullable=False)
     apellido = Column(String, nullable=False)
     comisiones = Column(Integer, nullable=False)

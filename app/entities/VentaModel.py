@@ -8,7 +8,7 @@ from .VendedorModel import Vendedor
 
 class Venta(Base):
     __tablename__ = 'ventas'
-    id = Column(String(10), primary_key=True, default=lambda:uuid.uuid4().hex[:10])
+    id = Column(String(10), primary_key=True, default=lambda:uuid.uuid4().hex[:10].upper())
     fecha_venta = Column(Date, nullable=False)
     auto_vin = Column(String, ForeignKey('autos.vin'), nullable=False)
     cliente_id = Column(String, ForeignKey('clientes.id'), nullable=False)
