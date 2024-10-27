@@ -16,8 +16,20 @@ class GestorAuto():
         self.auto_service.registrar_auto(auto)
         print("añadidoo")
     
+    # def modificar_auto(self, auto: AutoModel.Auto):
     def modificar_auto(self, vin, marca, modelo, año, precio, estado, cliente):
-        auto = self.auto_service.obtener_auto(vin)
+        auto:AutoModel.Auto = self.obtener_auto(vin)
+        auto.marca = marca
+        auto.modelo = modelo
+        auto.año = año
+        auto.precio = precio
+        auto.estado_relacion.nombre = estado
+        auto.cliente_id = cliente
+        self.auto_service.modificar_auto(auto)
+        # print("estamos en modddif")
+        # print(auto)
+        # print(auto.año)
+        # auto = self.auto_service.obtener_auto(vin)
        
     def obtener_auto(self, vin):
         auto = self.auto_service.obtener_auto(vin)

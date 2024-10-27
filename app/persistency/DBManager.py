@@ -49,7 +49,7 @@ class DBManager:
         try:
             session.delete(entity)
             session.commit()
-            session.refresh(entity)
+            # session.refresh(entity)
             print(f"Entidad eliminada: {entity}")
         except Exception as e:
             session.rollback()
@@ -60,10 +60,10 @@ class DBManager:
     def update(self, entity):
         session = self.get_session()
         try:
-            session.merge(entity)
+            # Asegurarse de que la entidad está en la sesión con merge
+            merged_entity = session.merge(entity)
             session.commit()
-            session.refresh(entity)
-            print(f"Entidad actualizada: {entity}")
+            print(f"Entidad actualizada: {merged_entity}")
         except Exception as e:
             session.rollback()
             print(f"Error al actualizar la entidad: {e}")

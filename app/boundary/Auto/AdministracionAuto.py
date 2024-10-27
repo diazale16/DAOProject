@@ -7,16 +7,14 @@ from . import ModificacionAuto
 
 
 class AdministracionAuto:
-    def __init__(self):
+    def __init__(self, home_instance):
         self.gestor_auto = GestorAuto()
-        # screen_width = self.ventana.winfo_screenwidth()
-        # screen_height = self.ventana.winfo_screenheight()
-        # self.ventana.geometry(f"{screen_width}x{screen_height}")
-        # self.ventana.geometry(f"1920x1080")
+        self.home_instance = home_instance
+        self.ventana = ctk.CTkToplevel()
+        
+        self.ventana.geometry(f"1280x720")
         ctk.set_appearance_mode("dark")
-        self.ventana = ctk.CTk()
-        self.ventana.attributes("-fullscreen", True)
-        self.ventana.resizable(False, False)
+        self.ventana.attributes("-zoomed", True)
         self.header()
         self.initialize_consulta()
         self.initialize_alta()
@@ -24,6 +22,7 @@ class AdministracionAuto:
         
     def home(self):
         self.ventana.destroy()
+        self.home_instance.ventana.deiconify()
         
     def show(self):
         self.ventana.mainloop()
@@ -136,8 +135,6 @@ class AdministracionAuto:
         self.item_selecc = self.tree.selection()
         if self.item_selecc:
             self.auto_selecc = self.tree.item(self.item_selecc, "values")
-
-        print(self.auto_selecc)
         self.label_det_vin = ctk.CTkLabel(
             self.frame_detalle, text=f"Código VIN: {self.auto_selecc[0]}"
         ).grid(row=1, column=0, padx=10, pady=10, sticky="w")
@@ -180,8 +177,10 @@ class AdministracionAuto:
         self.rellenar_tabla()
 
     def modificar_auto(self):
-        auto = Auto(vin=self.auto_selecc[0], marca=self.auto_selecc[1], modelo=self.auto_selecc[2], año=self.auto_selecc[3], precio=self.auto_selecc[4], estado_id=self.auto_selecc[5], cliente_id=self.auto_selecc[6])
-        print(auto)
+        mod_auto = ModificacionAuto.ModificacionAuto(self.ventana, self.auto_selecc) 
+        mod_auto.show()
+        # auto = Auto(vin=self.auto_selecc[0], marca=self.auto_selecc[1], modelo=self.auto_selecc[2], año=self.auto_selecc[3], precio=self.auto_selecc[4], estado_id=self.auto_selecc[5], cliente_id=self.auto_selecc[6])
+        # print(auto)
         # mod_auto = ModificacionAuto.ModificacionAuto(auto)
         # print(self.auto_selecc)
 

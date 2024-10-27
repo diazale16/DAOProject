@@ -23,7 +23,7 @@ class AutoService:
         for auto in autos_source:
             if isinstance(auto, Auto):
                 if not (auto.cliente_relacion):
-                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, None)
+                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, "")
                 else:
                     tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, f"{auto.cliente_relacion.nombre} {auto.cliente_relacion.apellido}")
                 datos_autos.append(tupla)
