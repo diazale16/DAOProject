@@ -9,9 +9,9 @@ class AdministracionCliente:
         self.home_instance = home_instance
         self.ventana = ctk.CTkToplevel()
         
-        self.ventana.geometry("1280x720")
+        self.ventana.geometry("1280x720")  # Ajustar la geometría manualmente
         ctk.set_appearance_mode("dark")
-        self.ventana.attributes("-zoomed", True)
+        self.ventana.state("zoomed")  # Maximizar la ventana sin usar -zoomed
         
         self.header()
         self.initialize_consulta()
@@ -43,16 +43,20 @@ class AdministracionCliente:
         # Configuración de la tabla de clientes
         self.tree = ttk.Treeview(
             self.frame_lista,
-            columns=("ID", "Nombre", "Apellido", "Email", "Telefono"),
+            columns=("ID", "Nombre", "Apellido", "Dirección", "Telefono"),
             show="headings",
         )
         self.tree.heading("ID", text="ID")
         self.tree.heading("Nombre", text="Nombre")
         self.tree.heading("Apellido", text="Apellido")
-        self.tree.heading("Email", text="Email")
+        self.tree.heading("Dirección", text="Dirección")
         self.tree.heading("Telefono", text="Teléfono")
         self.tree.pack(side="top", fill="both", expand=True)
         
+        # Botón para modificar un cliente
+        self.boton_modificar = ctk.CTkButton(self.frame_lista, text="Modificar Cliente", command=self.modificar_cliente)
+        self.boton_modificar.pack(side="bottom", fill="x", padx=10, pady=10)
+
         self.rellenar_tabla()
 
     def rellenar_tabla(self):

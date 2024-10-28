@@ -16,6 +16,10 @@ class VentaService:
 
     def obtener_venta(self, venta_id):
         return self.db_manager.get_by_id(Venta, venta_id)
+    
+    def obtener_venta_por_auto(self, auto_id):
+        return self.db_manager.get_by_id(Venta, auto_id)
+
 
     def listar_ventas(self):
         ventas_source = self.db_manager.get_all(Venta)
