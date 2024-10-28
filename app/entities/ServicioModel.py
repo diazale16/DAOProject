@@ -7,7 +7,7 @@ from .TipoServicioModel import TipoServicio
 
 class Servicio(Base):
     __tablename__ = 'servicios'
-    id = Column(String(10), primary_key=True, default=lambda:uuid.uuid4().hex[:10])
+    id = Column(String(10), primary_key=True, default=lambda:uuid.uuid4().hex[:10].upper())
     fecha_servicio = Column(Date, nullable=False)
     costo = Column(Float, nullable=False)
     auto_vin = Column(String, ForeignKey('autos.vin'), nullable=False)

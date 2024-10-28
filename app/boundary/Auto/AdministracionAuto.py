@@ -62,7 +62,7 @@ class AdministracionAuto:
     def rellenar_tabla(self):
         self.listar_autos()
         self.tree.delete(*self.tree.get_children())
-        for auto in self.autos:
+        for auto in self.datos_autos:
             self.tree.insert("", "end", values=auto)
 
     def initialize_alta(self):
@@ -132,30 +132,32 @@ class AdministracionAuto:
         self.tree.bind("<<TreeviewSelect>>", self.mostrar_detalles)
         
     def mostrar_detalles(self, event):
-        self.item_selecc = self.tree.selection()
-        if self.item_selecc:
-            self.auto_selecc = self.tree.item(self.item_selecc, "values")
+        item_selecc = self.tree.selection()
+        if item_selecc:
+            selection_data = self.tree.item(item_selecc, "values")
+            self.auto_selecc = self.autos[selection_data[0]]
         self.label_det_vin = ctk.CTkLabel(
-            self.frame_detalle, text=f"Código VIN: {self.auto_selecc[0]}"
+            self.frame_detalle, text=f"Código VIN: {self.auto_selecc.vin}"
         ).grid(row=1, column=0, padx=10, pady=10, sticky="w")
         self.label_det_marca = ctk.CTkLabel(
-            self.frame_detalle, text=f"Marca: {self.auto_selecc[1]}"
+            self.frame_detalle, text=f"Marca: {self.auto_selecc.marca}"
         ).grid(row=1, column=2, padx=10, pady=10, sticky="w")
         self.label_det_modelo = ctk.CTkLabel(
-            self.frame_detalle, text=f"Modelo: {self.auto_selecc[2]}"
+            self.frame_detalle, text=f"Modelo: {self.auto_selecc.modelo}"
         ).grid(row=1, column=4, padx=10, pady=10, sticky="w")
         self.label_det_año = ctk.CTkLabel(
-            self.frame_detalle, text=f"Año: {self.auto_selecc[3]}"
+            self.frame_detalle, text=f"Año: {self.auto_selecc.año}"
         ).grid(row=2, column=0, padx=10, pady=10, sticky="w")
         self.label_det_precio = ctk.CTkLabel(
-            self.frame_detalle, text=f"Precio: {self.auto_selecc[4]}"
+            self.frame_detalle, text=f"Precio: {self.auto_selecc.precio}"
         ).grid(row=2, column=2, padx=10, pady=10, sticky="w")
         self.label_det_estado = ctk.CTkLabel(
-            self.frame_detalle, text=f"Estado: {self.auto_selecc[5]}"
+            self.frame_detalle, text=f"Estado: {self.auto_selecc.estado_relacion.nombre}"
         ).grid(row=2, column=4, padx=10, pady=10, sticky="w")
-        self.label_det_cliente = ctk.CTkLabel(
-            self.frame_detalle, text=f"Cliente ID: {self.auto_selecc[6]}"
-        ).grid(row=3, column=0, padx=10, pady=10, sticky="w")
+        if self.auto_selecc.cliente_id:
+            self.label_det_cliente = ctk.CTkLabel(
+                self.frame_detalle, text=f"Cliente ID: {self.auto_selecc.cliente_id} ({self.auto_selecc.cliente_relacion.nombre} {self.auto_selecc.cliente_relacion.apellido})"
+            ).grid(row=3, column=0, padx=10, pady=10, sticky="w")
 
         self.boton_modificar = ctk.CTkButton(
             self.frame_detalle, text="Modificar Auto", command=self.modificar_auto
@@ -173,7 +175,7 @@ class AdministracionAuto:
         self.precio = self.entry_precio.get()
         self.estado = self.estado_var.get()
         self.cliente = self.entry_cliente.get() if self.entry_cliente.get() else None
-        self.gestor_auto.registrar_auto(self.vin, self.marca, self.modelo, self.año, self.precio, self.estado, self.cliente)
+        self.gestor_auto.registrar_auto(vin=self.vin, marca=self.marca, modelo=self.modelo, año=self.año, precio=self.precio, nom_estado=self.estado, cliente=self.cliente)
         self.rellenar_tabla()
 
     def modificar_auto(self):
@@ -189,5 +191,15 @@ class AdministracionAuto:
         self.rellenar_tabla()
     
     def listar_autos(self):
-        self.autos = self.gestor_auto.listar_autos()
+        data:list[Auto] = self.gestor_auto.listar_autos()
+        self.autos = {auto.vin: auto for auto in data}
+        self.datos_autos = []
+        for auto in self.autos.values():
+            if isinstance(auto, Auto):
+                if not (auto.cliente_relacion):
+                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, "")
+                else:
+                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, auto.cliente_id)
+                    # tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, f"{auto.cliente_relacion.nombre} {auto.cliente_relacion.apellido}", auto)
+                self.datos_autos.append(tupla)
 

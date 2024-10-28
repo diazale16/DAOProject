@@ -1,39 +1,44 @@
-# control/GestorCliente.py
-
-from ..services.ClienteService import ClienteService
+from ..persistency.DBManager import DBManager
 from ..entities.ClienteModel import Cliente
 
-class GestorCliente:
+class GestorCliente():
     def __init__(self):
-        self.cliente_service = ClienteService()
+        self.db_manager = DBManager()
 
-    def registrar_cliente(self, id, nombre, apellido, direccion, telefono):
-        nuevo_cliente = Cliente(id=id, nombre=nombre, apellido=apellido, direccion=direccion, telefono=telefono)
-        self.cliente_service.registrar_cliente(nuevo_cliente)
-        print("Cliente registrado con éxito.")
+
+    def registrar_cliente(self, nombre, apellido, telefono, direccion):
+        cliente = Cliente(nombre=nombre, apellido=apellido, telefono=telefono, direccion=direccion)    
+        self.db_manager.register(cliente)
+        return cliente
+
+    
+    def modificar_cliente(self, id, nombre, apellido, telefono, direccion):
+        cliente:Cliente = self.obtener_cliente(id)        
         
-    def modificar_cliente(self, id, nombre=None, apellido=None, direccion=None, telefono=None):
-        cliente = self.cliente_service.obtener_cliente(id)
-        if cliente:
-            if nombre:
-                cliente.nombre = nombre
-            if apellido:
-                cliente.apellido = apellido
-            if direccion:
-                cliente.direccion = direccion
-            if telefono:
-                cliente.telefono = telefono
-            self.cliente_service.modificar_cliente(cliente)
-            print("Cliente modificado con éxito.")
-    
-    def eliminar_cliente(self, id):
-        cliente = self.cliente_service.obtener_cliente(id)
-        if cliente:
-            self.cliente_service.eliminar_cliente(cliente)
-            print("Cliente eliminado con éxito.")
-    
+        cliente.nombre = nombre
+        cliente.apellido = apellido
+        cliente.telefono = telefono
+        cliente.direccion = direccion
+        self.db_manager.update(cliente)
+
+       
     def obtener_cliente(self, id):
-        return self.cliente_service.obtener_cliente(id)
+        cliente = self.db_manager.get_by_id(Cliente, id)
+        return cliente
+
+
+    def eliminar_cliente(self, id):
+        cliente = self.obtener_cliente(id)
+        self.db_manager.delete(cliente)
+        
     
     def listar_clientes(self):
-        return self.cliente_service.listar_clientes()
+        clientes_source = self.db_manager.get_all(Cliente) 
+        datos_clientes = []
+        for cliente in clientes_source:
+            if isinstance(cliente, Cliente):
+                tupla = (cliente.id, cliente.nombre, cliente.apellido, cliente.telefono, cliente.direccion)
+                datos_clientes.append(tupla)
+        return datos_clientes
+        
+        

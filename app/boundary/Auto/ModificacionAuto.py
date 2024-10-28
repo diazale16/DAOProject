@@ -4,10 +4,10 @@ from ...entities.AutoModel import Auto
 from ...control.GestorAuto import GestorAuto
 
 class ModificacionAuto:
-    def __init__(self, adm_auto_instance, data):
+    def __init__(self, adm_auto_instance, auto:Auto):
         self.gestor_auto = GestorAuto()
         self.adm_auto_instance = adm_auto_instance
-        self.data = data
+        self.auto = auto
         ctk.set_appearance_mode("dark")
         self.ventana = ctk.CTkToplevel(adm_auto_instance)
         self.ventana.geometry("300x500")
@@ -24,37 +24,39 @@ class ModificacionAuto:
         # Etiqueta y entrada para el código VIN
         self.label_vin = ctk.CTkLabel(self.frame_modif, text="Código VIN:").grid(row=0, column=0, padx=10, pady=10, sticky="w")
         self.entry_vin = ctk.CTkEntry(self.frame_modif)
-        self.entry_vin.insert(0, self.data[0])
+        self.entry_vin.insert(0, self.auto.vin)
+        self.entry_vin.configure(state="disabled")
         self.entry_vin.grid(row=0, column=1, padx=10, pady=10)
         # Etiqueta y entrada para la marca
         self.label_marca = ctk.CTkLabel(self.frame_modif, text="Marca:").grid(row=1, column=0, padx=10, pady=10, sticky="w")
         self.entry_marca = ctk.CTkEntry(self.frame_modif)
-        self.entry_marca.insert(0, self.data[1])
+        self.entry_marca.insert(0, self.auto.marca)
         self.entry_marca.grid(row=1, column=1, padx=10, pady=10)
         # Etiqueta y entrada para el modelo
         self.label_modelo = ctk.CTkLabel(self.frame_modif, text="Modelo:").grid(row=2, column=0, padx=10, pady=10, sticky="w")
         self.entry_modelo = ctk.CTkEntry(self.frame_modif)
-        self.entry_modelo.insert(0, self.data[2])
+        self.entry_modelo.insert(0, self.auto.modelo)
         self.entry_modelo.grid(row=2, column=1, padx=10, pady=10)
         # Etiqueta y entrada para el año
         self.label_año = ctk.CTkLabel(self.frame_modif, text="Año:").grid(row=3, column=0, padx=10, pady=10, sticky="w")
         self.entry_año = ctk.CTkEntry(self.frame_modif)
-        self.entry_año.insert(0, self.data[3])
+        self.entry_año.insert(0, self.auto.año)
         self.entry_año.grid(row=3, column=1, padx=10, pady=10)
         # Etiqueta y entrada para el precio
         self.label_precio = ctk.CTkLabel(self.frame_modif, text="Precio:").grid(row=4, column=0, padx=10, pady=10, sticky="w")
         self.entry_precio = ctk.CTkEntry(self.frame_modif)
-        self.entry_precio.insert(0, self.data[4])
+        self.entry_precio.insert(0, self.auto.precio)
         self.entry_precio.grid(row=4, column=1, padx=10, pady=10)
         # Etiqueta y opción para el estado (nuevo/usado)
         self.label_estado = ctk.CTkLabel(self.frame_modif, text="Estado:").grid(row=5, column=0, padx=10, pady=10, sticky="w")
-        self.estado_var = ctk.StringVar(value=f"{self.data[5]}")
+        self.estado_var = ctk.StringVar(value=f"{self.auto.estado_relacion.nombre}")
         self.radio_nuevo = ctk.CTkRadioButton(self.frame_modif, text="Nuevo", variable=self.estado_var, value="Nuevo").grid(row=5, column=1, padx=10, pady=10, sticky="w")
         self.radio_usado = ctk.CTkRadioButton(self.frame_modif, text="Usado", variable=self.estado_var, value="Usado").grid(row=5, column=1, padx=10, pady=10, sticky="e")
         # Etiqueta y entrada para el cliente (opcional)
         self.label_cliente = ctk.CTkLabel(self.frame_modif, text="Cliente (opcional):").grid(row=6, column=0, padx=10, pady=10, sticky="w")
         self.entry_cliente = ctk.CTkEntry(self.frame_modif)
-        self.entry_cliente.insert(0, self.data[6])
+        if self.auto.cliente_id:
+            self.entry_cliente.insert(0, self.auto.cliente_id)
         self.entry_cliente.grid(row=6, column=1, padx=10, pady=10)
         # Botón para registrar el auto
         self.boton_registrar = ctk.CTkButton(self.frame_modif, text="Modificar Auto", command=self.modificar_auto)
