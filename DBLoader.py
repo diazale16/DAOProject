@@ -15,12 +15,14 @@ from app.control import (
     # GestorServicio,
     # GestorTipoServicio,
     # GestorVendedor,
-    # GestorVenta,
+    GestorVenta,
     GestorEstado,
 )
 from app.persistency.DBManager import DBManager
-
 import random
+
+# global db manager
+db_manager = DBManager()
 
 # VARS
 #autos
@@ -163,12 +165,13 @@ def main():
     auto_gestor = GestorAuto.GestorAuto()
     estado_gestor = GestorEstado.GestorEstado()
     cliente_gestor = GestorCliente.GestorCliente()
+    venta_gestor = GestorVenta.GestorVenta()
 
     
     sup_limit = len(VIN_CODES)
     for i in range(sup_limit):
-        rand1 = random.randint(0, sup_limit-1)
-        rand2 = random.randint(0, 2)
+        rand1 = lambda:random.randint(0, sup_limit-1)
+        rand2 = lambda:random.randint(0, 2)
         
         # Estados
         nom_estado = "Nuevo" if i%2 == 0 else "Usado"
@@ -176,19 +179,36 @@ def main():
        
         # Auto
         vin=VIN_CODES[i]
-        marca=MARCAS[rand1]
-        modelo=MARCA_MODELOS[MARCAS[rand1]][rand2]
+        marca=MARCAS[rand1()]
+        modelo=MARCA_MODELOS[MARCAS[rand1()]][rand2()]
         año=random.randint(1970, 2023)
         precio=random.randrange(5000000, 20000000, 1)
-        auto:AutoModel.Auto = auto_gestor.registrar_auto(vin, marca, modelo, año, precio, nom_estado, None)
+        auto:AutoModel.Auto = auto_gestor.registrar_auto(vin=vin, marca=marca, modelo=modelo, año=año, precio=precio, nom_estado=nom_estado, cliente=None)
         
-        # Clientes
-        nom_cli = NOMBRES[rand1]
-        apell_cli = APELLIDOS[rand1]
-        telefono = random.randint(3000000000, 3900000000)
-        direccion = DIRECCIONES[i]
-        cliente:ClienteModel.Cliente = cliente_gestor.registrar_cliente(nom_cli, apell_cli, telefono, direccion)
+        if i%2 == 0:
+            # Vendedores
+            nom_vend = NOMBRES[rand1()]
+            apell_vend = APELLIDOS[rand1()]
+            comision = random.randint(1,25)
+            vendedor = VendedorModel.Vendedor(nombre=nom_vend, apellido=apell_vend, comision=comision)
+            db_manager.register(vendedor)
+        
         if i%3 == 0:
-            auto_gestor.asignar_cliente(auto.vin, cliente.id)
+            # Clientes
+            nom_cli = NOMBRES[rand1()]
+            apell_cli = APELLIDOS[rand1()]
+            telefono = random.randint(3000000000, 3900000000)
+            direccion = DIRECCIONES[i]
+            cliente:ClienteModel.Cliente = cliente_gestor.registrar_cliente(nombre=nom_cli, apellido=apell_cli, telefono=telefono, direccion=direccion)
+            
+            # Venta
+            # fecha = Column(Date, nullable=False)
+            # auto_vin = Column(String, ForeignKey('autos.vin'), nullable=False)
+            # cliente_id = Column(String, ForeignKey('clientes.id'), nullable=False)
+            # vendedor_id = Column(String, ForeignKey('vendedores.id'), nullable=False)
+            # monto = Column(Float, nullable=False)
+            venta:VentaModel.Vendedor = venta_gestor.registrar_venta(auto=auto, cliente=cliente, vendedor=vendedor)
+            
+            # auto_gestor.asignar_cliente(auto.vin, cliente.id)
 
 main()

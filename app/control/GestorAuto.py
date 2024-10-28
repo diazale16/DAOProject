@@ -8,9 +8,9 @@ class GestorAuto():
         self.db_manager = DBManager()
 
 
-    def registrar_auto(self, vin, marca, modelo, año, precio, estado, cliente):
+    def registrar_auto(self, vin, marca, modelo, año, precio, nom_estado, cliente):
         gestor_estado = GestorEstado.GestorEstado()
-        estado = gestor_estado.registrar_estado(estado)
+        estado = gestor_estado.registrar_estado(nom_estado)
         auto = Auto(vin=vin, marca=marca, modelo=modelo, año=año, precio=precio, estado_id=estado.id, cliente_id=cliente)    
         self.db_manager.register(auto)
         return auto
@@ -43,17 +43,18 @@ class GestorAuto():
     
     def listar_autos(self):
         autos_source = self.db_manager.get_all(Auto) 
-        datos_autos = []
-        for auto in autos_source:
-            if isinstance(auto, Auto):
-                if not (auto.cliente_relacion):
-                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, "", auto)
-                else:
-                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, auto.cliente_id, auto)
-                    # tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, f"{auto.cliente_relacion.nombre} {auto.cliente_relacion.apellido}", auto)
-                datos_autos.append(tupla)
-        return datos_autos
-    
+        # datos_autos = []
+        # for auto in autos_source:
+        #     if isinstance(auto, Auto):
+        #         if not (auto.cliente_relacion):
+        #             tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, "", auto)
+        #         else:
+        #             tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, auto.cliente_id, auto)
+        #             # tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, f"{auto.cliente_relacion.nombre} {auto.cliente_relacion.apellido}", auto)
+        #         datos_autos.append(tupla)
+        # return datos_autos
+        return self.db_manager.get_all(Auto) 
+        
     
     def asignar_cliente(self, vin, id):
         auto:Auto = self.db_manager.get_by_id(Auto, vin)
