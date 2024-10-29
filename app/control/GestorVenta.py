@@ -58,6 +58,7 @@ class GestorVenta():
         self.db_manager.delete(entity=venta)
 
     def listar_ventas(self):
+        return self.db_manager.get_all(entity_class=Venta)
         # ventas_source = self.db_manager.get_all(Venta)
         # datos_ventas = []
         # for auto in autos_source:
@@ -69,4 +70,8 @@ class GestorVenta():
         #             # tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, f"{auto.cliente_relacion.nombre} {auto.cliente_relacion.apellido}", auto)
         #         datos_ventas.append(tupla)
         # return datos_ventas
-        return self.db_manager.get_all(entity_class=Venta)
+        
+    def listar_autos_vendidos(self):
+        ventas:list[Venta] = self.listar_ventas()
+        autos_vendidos = [venta.auto_relacion for venta in ventas]
+        return autos_vendidos

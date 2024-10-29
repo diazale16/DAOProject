@@ -15,7 +15,7 @@ class Servicio(Base):
     vendedor_id = Column(String, ForeignKey('vendedores.id'), nullable=False)
 
     # Relación con la entidad Dirección
-    auto_relacion = relationship('Auto', back_populates='servicio_relacion')
-    tipo_servicio_relacion = relationship('TipoServicio', back_populates='servicio_relacion')
+    auto_relacion = relationship('Auto', back_populates='servicio_relacion', lazy="joined")
+    tipo_servicio_relacion = relationship('TipoServicio', back_populates='servicio_relacion', lazy="joined")
     vendedor_relacion = relationship('Vendedor', back_populates='servicio_relacion', lazy="joined")
     

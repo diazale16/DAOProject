@@ -11,4 +11,4 @@ class Comision(Base):
     vendedor_id = Column(String(10), ForeignKey('vendedores.id'), nullable=False)
 
     # Relación de regreso hacia el vendedor
-    vendedor_relacion = relationship('Vendedor', back_populates='comisiones')
+    vendedor_relacion = relationship('Vendedor', back_populates='comisiones', lazy="joined")

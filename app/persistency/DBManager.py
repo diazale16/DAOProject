@@ -75,7 +75,7 @@ class DBManager:
         try:
             return session.query(entity_class).all()
         finally:
-            session.close()
+                session.close()
 
     def get_by_id(self, entity_class, entity_id):
         session = self.get_session()

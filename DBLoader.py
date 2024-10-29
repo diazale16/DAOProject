@@ -12,9 +12,9 @@ from app.control import (
     GestorAuto,
     GestorCliente,
     # GestorDireccion,
-    # GestorServicio,
-    # GestorTipoServicio,
-    # GestorVendedor,
+    GestorServicio,
+    GestorTipoServicio,
+    GestorVendedor,
     GestorVenta,
     GestorEstado,
 )
@@ -166,6 +166,9 @@ def main():
     estado_gestor = GestorEstado.GestorEstado()
     cliente_gestor = GestorCliente.GestorCliente()
     venta_gestor = GestorVenta.GestorVenta()
+    vendedor_gestor = GestorVendedor.GestorVendedor()
+    servicio_gestor = GestorServicio.GestorServicio()
+    tipo_servicio_gestor = GestorTipoServicio.GestorTipoServicio()
 
     
     sup_limit = len(VIN_CODES)
@@ -190,8 +193,7 @@ def main():
             nom_vend = NOMBRES[rand1()]
             apell_vend = APELLIDOS[rand1()]
             comision = random.randint(1,25)
-            vendedor = VendedorModel.Vendedor(nombre=nom_vend, apellido=apell_vend, comision=comision)
-            db_manager.register(vendedor)
+            vendedor = vendedor_gestor.registrar_vendedor(nombre=nom_vend, apellido=apell_vend, comision=comision)
         
         if i%3 == 0:
             # Clientes
@@ -203,6 +205,7 @@ def main():
             
             # Venta
             # fecha = Column(Date, nullable=False)
+            
             # auto_vin = Column(String, ForeignKey('autos.vin'), nullable=False)
             # cliente_id = Column(String, ForeignKey('clientes.id'), nullable=False)
             # vendedor_id = Column(String, ForeignKey('vendedores.id'), nullable=False)
@@ -210,5 +213,17 @@ def main():
             venta:VentaModel.Vendedor = venta_gestor.registrar_venta(auto=auto, cliente=cliente, vendedor=vendedor)
             
             # auto_gestor.asignar_cliente(auto.vin, cliente.id)
+    
+    autos_vendidos = venta_gestor.listar_autos_vendidos()
+    for i in range(len(autos_vendidos)):
+        if i%2 == 0:
+            nom_tipo_servicio = "Mantenimiento" if random.randint(0,1) == 0 else "Reparacion"
+            tipo_servicio = tipo_servicio_gestor.registrar_tipo_servicio(nombre=nom_tipo_servicio)
+            
+            costo = random.randrange(100000,250000,1)
+            auto:AutoModel.Auto = autos_vendidos[i]
+            servicio = servicio_gestor.registrar_servicio(costo=costo, auto=auto, tipo_servicio=tipo_servicio, vendedor=auto.venta_relacion.vendedor_relacion)
+            print(servicio)
+    
 
 main()
