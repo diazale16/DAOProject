@@ -12,5 +12,6 @@ class Vendedor(Base):
 
     # Relación con la entidad Venta
     venta_relacion = relationship('Venta', back_populates='vendedor_relacion')
+    servicio_relacion = relationship('Servicio', back_populates='vendedor_relacion')
     # Relación con la entidad Comision (uno-a-muchos)
     comisiones = relationship('Comision', back_populates='vendedor_relacion', cascade="all, delete-orphan", lazy="joined")
