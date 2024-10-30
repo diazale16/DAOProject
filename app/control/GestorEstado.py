@@ -11,13 +11,20 @@ class GestorEstado():
         self.db_manager.register(entity=estado)
         return estado
 
-    def modificar_estado(self, id, nom_estado):
+    def modificar_estado(self, id, nom_estado=None):
         estado: Estado = self.db_manager.get_by_id(Estado, id)
-        estado.nombre = nom_estado
-        self.db_manager.update(entity=estado)
+        if estado:
+            if nom_estado:
+                estado.nombre = nom_estado
+            self.db_manager.update(entity=estado)
 
-    # def eliminar_estado(self, estado:Estado):
-    #     self.db_manager.delete(estado)
+    def obtener_estado(self, id):
+        return self.db_manager.get_by_id(entity_class=Estado, entity_id=id)
+
+    def eliminar_estado(self, id):
+        estado: Estado = self.obtener_estado(id=id)
+        if estado:
+            self.db_manager.delete(entity=estado)
 
     # def obtener_estado(self, id):
     #     return self.db_manager.get_by_id(Estado, id)

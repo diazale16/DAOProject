@@ -50,22 +50,24 @@ class GestorVenta():
     #     self.db_manager.update(auto)
 
     def obtener_venta(self, id):
-        venta = self.db_manager.get_by_id(entity_class=Venta, entity_id=id)
-        return venta
+        return self.db_manager.get_by_id(entity_class=Venta, entity_id=id)
 
     def eliminar_venta(self, id):
-        venta = self.obtener_venta(id=id)
-        self.db_manager.delete(entity=venta)
+        venta:Venta = self.obtener_venta(id=id)
+        if venta:
+            self.db_manager.delete(entity=venta)
 
     def listar_ventas(self):
         return self.db_manager.get_all(entity_class=Venta)
 
-    def listar_autos_vendidos(self):
+    def listar_autos_vendidos(self, id_cliente=None):
         ventas: list[Venta] = self.listar_ventas()
-        autos_vendidos = [venta.auto_relacion for venta in ventas]
-        return autos_vendidos
+        if id_cliente:
+            return [venta.auto_relacion for venta in ventas if venta.cliente_id == id_cliente]
+        else:
+            return [venta.auto_relacion for venta in ventas]
 
-    def listar_autos_vendidos_por_cliente(self, id):
-        ventas: list[Venta] = self.listar_ventas()
-        autos_vendidos_cliente = [venta.auto_relacion for venta in ventas if venta.cliente_id == id]
-        return autos_vendidos_cliente
+    # def listar_autos_vendidos_por_cliente(self, id):
+    #     ventas: list[Venta] = self.listar_ventas()
+    #     autos_vendidos = [venta.auto_relacion for venta in ventas if venta.cliente_id == id]
+    #     return autos_vendidos_cliente

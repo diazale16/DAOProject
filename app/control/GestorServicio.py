@@ -12,20 +12,20 @@ class GestorServicio:
     def __init__(self):
         self.db_manager = DBManager()
 
-    def registrar_servicio(self, costo, auto:Auto, tipo_servicio:TipoServicio, vendedor:Vendedor):
+    def registrar_servicio(self, costo, auto: Auto, tipo_servicio: TipoServicio, vendedor: Vendedor):
         # vars
-        fecha_servicio = datetime.today().date() # formato fecha YYYY-MM-DD
+        fecha_servicio = datetime.today().date()  # formato fecha YYYY-MM-DD
         monto_comision = costo * (vendedor.comision / 100)
-        monto_servicio = costo - monto_comision 
-        
-        # reg venta
-        servicio = Servicio(fecha_servicio=fecha_servicio, costo=monto_servicio, auto_vin=auto.vin, tipo_servicio_id=tipo_servicio.id, vendedor_id=vendedor.id)    
+        monto_servicio = costo - monto_comision
+        # servicio
+        servicio = Servicio(fecha_servicio=fecha_servicio, costo=monto_servicio,
+                            auto_vin=auto.vin, tipo_servicio_id=tipo_servicio.id, vendedor_id=vendedor.id)
         self.db_manager.register(entity=servicio)
-        # reg comision por venta para el vendedor
-        comision = Comision(monto=monto_comision , fecha=fecha_servicio, vendedor_id=vendedor.id)
+        # comision por venta para el vendedor
+        comision = Comision(monto=monto_comision,
+                            fecha=fecha_servicio, vendedor_id=vendedor.id)
         self.db_manager.register(entity=comision)
         return servicio
-        
 
     # def modificar_servicio(self, id_servicio, fecha_servicio=None, costo=None, auto_vin=None, tipo_servicio_id=None):
     #     servicio = self.servicio_service.obtener_servicio(id_servicio)
@@ -41,14 +41,12 @@ class GestorServicio:
     #         self.servicio_service.modificar_servicio(servicio)
 
     def obtener_servicio(self, id):
-        servicio = self.db_manager.get_by_id(entity_class=Servicio, entity_id=id)
-        return servicio
-    
-    
-    def eliminar_servicio(self, id):
-        servicio = self.obtener_servicio(id)
-        self.db_manager.delete(entity=servicio)
+        return self.db_manager.get_by_id(entity_class=Servicio, entity_id=id)
 
+    def eliminar_servicio(self, id):
+        servicio: Servicio = self.obtener_servicio(id)
+        if servicio:
+            self.db_manager.delete(entity=servicio)
 
     def listar_servicios(self):
         return self.db_manager.get_all(entity_class=Servicio)

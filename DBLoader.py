@@ -25,7 +25,6 @@ import random
 db_manager = DBManager()
 
 # VARS
-#autos
 MARCAS = [
     "Toyota",
     "Ford",
@@ -163,7 +162,7 @@ DIRECCIONES = [
 def main():
     # Gestores
     auto_gestor = GestorAuto.GestorAuto()
-    estado_gestor = GestorEstado.GestorEstado()
+    # estado_gestor = GestorEstado.GestorEstado()
     cliente_gestor = GestorCliente.GestorCliente()
     venta_gestor = GestorVenta.GestorVenta()
     vendedor_gestor = GestorVendedor.GestorVendedor()
@@ -225,7 +224,7 @@ def main():
             servicio = servicio_gestor.registrar_servicio(costo=costo, auto=auto, tipo_servicio=tipo_servicio, vendedor=venta.vendedor_relacion)
             print(servicio)
             
-    autos_vendidos_cliente = venta_gestor.listar_autos_vendidos_por_cliente(id="9DDFFEC087")
+    autos_vendidos_cliente = venta_gestor.listar_autos_vendidos(id_cliente=cliente.id)
     print(autos_vendidos_cliente)
     
     
