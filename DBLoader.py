@@ -212,18 +212,22 @@ def main():
             # monto = Column(Float, nullable=False)
             venta:VentaModel.Vendedor = venta_gestor.registrar_venta(auto=auto, cliente=cliente, vendedor=vendedor)
             
-            # auto_gestor.asignar_cliente(auto.vin, cliente.id)
-    
-    autos_vendidos = venta_gestor.listar_autos_vendidos()
-    for i in range(len(autos_vendidos)):
+    ventas:list[VentaModel.Venta] = venta_gestor.listar_ventas()
+    for i in range(len(ventas)):
         if i%2 == 0:
+            # Tipo Servicio
             nom_tipo_servicio = "Mantenimiento" if random.randint(0,1) == 0 else "Reparacion"
             tipo_servicio = tipo_servicio_gestor.registrar_tipo_servicio(nombre=nom_tipo_servicio)
             
+            # Servicios    
             costo = random.randrange(100000,250000,1)
-            auto:AutoModel.Auto = autos_vendidos[i]
-            servicio = servicio_gestor.registrar_servicio(costo=costo, auto=auto, tipo_servicio=tipo_servicio, vendedor=auto.venta_relacion.vendedor_relacion)
+            auto:AutoModel.Auto = ventas[i].auto_relacion
+            servicio = servicio_gestor.registrar_servicio(costo=costo, auto=auto, tipo_servicio=tipo_servicio, vendedor=venta.vendedor_relacion)
             print(servicio)
+            
+    autos_vendidos_cliente = venta_gestor.listar_autos_vendidos_por_cliente(id="9DDFFEC087")
+    print(autos_vendidos_cliente)
+    
     
 
 main()

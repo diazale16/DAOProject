@@ -24,6 +24,7 @@ class GestorServicio:
         # reg comision por venta para el vendedor
         comision = Comision(monto=monto_comision , fecha=fecha_servicio, vendedor_id=vendedor.id)
         self.db_manager.register(entity=comision)
+        return servicio
         
 
     # def modificar_servicio(self, id_servicio, fecha_servicio=None, costo=None, auto_vin=None, tipo_servicio_id=None):

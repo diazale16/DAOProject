@@ -11,15 +11,15 @@ class GestorVendedor:
         self.db_manager.register(vendedor)
         return vendedor
         
-    def modificar_vendedor(self, id_vendedor, nombre=None, apellido=None, comisiones=None):
+    def modificar_vendedor(self, id_vendedor, nombre=None, apellido=None, comision=None):
         vendedor:Vendedor = self.obtener_vendedor(id_vendedor)
         if vendedor:
             if nombre:
                 vendedor.nombre = nombre
             if apellido:
                 vendedor.apellido = apellido
-            if comisiones is not None:
-                vendedor.comisiones = comisiones
+            if comision is not None:
+                vendedor.comision = comision
             self.db_manager.update(vendedor)
     
     def obtener_vendedor(self, id):
