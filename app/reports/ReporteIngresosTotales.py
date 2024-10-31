@@ -22,6 +22,9 @@ from reportlab.graphics import renderPM
 from reportlab.graphics.shapes import Drawing, String
 from reportlab.graphics.charts.barcharts import VerticalBarChart
 from reportlab.lib import colors
+import matplotlib.pyplot as plt
+from collections import OrderedDict
+
 from io import BytesIO
 
 
@@ -62,12 +65,11 @@ class ReporteIngresosTotales(ReporteBase.ReporteBase):
         años = años_ventas.union(años_servicios)
 
         months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-        months_dict = {m: 0 for m in months}
 
         for año in años:
-            template[año] = months_dict
-
-        return template
+            template[año] = { m:0 for m in months}
+        
+        return OrderedDict(sorted(template.items()))
 
     def get_data(self):
         # data
@@ -87,7 +89,7 @@ class ReporteIngresosTotales(ReporteBase.ReporteBase):
         for s in servicios:
             ingreso_servicios += s.costo
             ingreso_total += s.costo
-            data_segregada[s.fecha.year][s.fecha.month] += int(s.costo)
+            (data_segregada[s.fecha.year])[s.fecha.month] += int(s.costo)
         # comisiones
         gestor_comisiones = GestorComision.GestorComision()
         comisiones: list[Comision] = gestor_comisiones.listar_comisiones()
@@ -102,40 +104,58 @@ class ReporteIngresosTotales(ReporteBase.ReporteBase):
             "Total bruto": round(ingreso_total + total_comisiones, 3)
         }, data_segregada
 
-    def crear_grafico_barras(self, año: int, data_mes: dict):
-        valores = [v for v in data_mes.values()]
+    # def crear_grafico_barras(self, año: int, data_mes: dict):
+    #     valores = list(data_mes.values())
 
-        grafico = Drawing(400, 300)
-        chart = VerticalBarChart()
-        chart.x = 50
-        chart.y = 50
-        chart.height = 200
-        chart.width = 300
+    #     grafico = Drawing(400, 300)
+    #     chart = VerticalBarChart()
+    #     chart.x = 50
+    #     chart.y = 50
+    #     chart.height = 200
+    #     chart.width = 300
 
-        # Configuración de los datos del gráfico
-        chart.data = [list(data_mes.values())]  # Convertir a lista
-        chart.categoryAxis.categoryNames = [
-            'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
-        chart.valueAxis.valueMin = 0  # Valor mínimo del eje Y
-        chart.valueAxis.valueMax = max(data_mes.values()) + (max(data_mes.values()) * 0.1)
-        chart.valueAxis.valueStep = max(data_mes.values()) // 10
-        chart.barWidth = 10
-        chart.groupSpacing = 10
+    #     # Configuración de los datos del gráfico
+    #     chart.data = [valores]  # Convertir a lista
+    #     chart.categoryAxis.categoryNames = [
+    #         'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+    #     chart.valueAxis.valueMin = 0  # Valor mínimo del eje Y
+    #     chart.valueAxis.valueMax = max(valores) + (max(valores) * 0.1)
+    #     # chart.valueAxis.valueStep = valores
+    #     chart.barWidth = 10
+    #     chart.groupSpacing = 10
 
-        # Asignar colores a las barras
-        for index in range(len(chart.data[0])):
-            chart.bars[index].fillColor = colors.Color(index / len(chart.data[0]), 0.5, 0.5)  # Color dinámico
+    #     # Asignar colores a las barras
+    #     for index in range(len(chart.data[0])):
+    #         chart.bars[index].fillColor = colors.Color(index / len(chart.data[0]), 0.5, 0.5)  # Color dinámico
 
-        grafico.add(chart)
-
-        # Agregar valores sobre las barras
-        for index, value in enumerate(valores):
-            x = chart.x + (chart.barWidth + chart.groupSpacing) * index + chart.barWidth / 2  # Calcular la posición X
-            y = chart.y + chart.height + 5  # Posición Y para el texto (un poco arriba de la barra)
-            grafico.add(String(x, y, str(value), textAnchor='middle', fontSize=10, fillColor=colors.black))
-
-        return grafico
+    #     grafico.add(chart)
+    #     return grafico
     
+    def crear_grafico_barras(self, año: int, data_mes: dict, filename: str):
+        meses = list(data_mes.keys())
+        valores = list(data_mes.values())
+        plt.figure(figsize=(6, 3))  # Tamaño del gráfico
+        bars = plt.barh(meses, valores, color=plt.cm.viridis(range(len(valores))))  # Colores intercalados
+
+        plt.gca().set_xticks([])
+        
+        # Agregar etiquetas a las barras al final
+        for bar in bars:
+            xval = bar.get_width()  # Obtiene la longitud de la barra
+            plt.text(xval + 5, bar.get_y() + bar.get_height()/2,  # +5 para que se coloque un poco a la derecha
+                    round(xval, 2), ha='left', va='center', fontsize=6)  # Tamaño de fuente de la etiqueta
+
+        plt.xlabel('Valores', fontsize=6)
+        plt.ylabel('Meses', fontsize=6)
+        plt.title(f'Gráfico de Ventas por Mes - {año}', fontsize=10)
+        plt.yticks(ticks=meses, labels=['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'], fontsize=6)
+        plt.xlim(0, max(valores) + (max(valores) * 0.1))
+
+        # Guardar el gráfico como imagen
+        plt.tight_layout()
+        plt.savefig(filename)
+        plt.close()  
+        
 
     def construccion_contenido(self):
         rtn_content = []
@@ -159,14 +179,22 @@ class ReporteIngresosTotales(ReporteBase.ReporteBase):
         
 
         # graficos
+        # for año, data_mes in graf_source.items():
+        #     text = f"Ingresos mensuales para el año {año}"
+        #     rtn_content.append(Paragraph(text, self.styles['Heading5']))
+        #     graf = self.crear_grafico_barras(año, data_mes)
+        #     renderPM.drawToFile(graf, f"resources/images/bar_chart_ingresos_{año}.png", fmt='PNG')
+        #     image = Image(f"resources/images/bar_chart_ingresos_{año}.png")
+        #     image.hAlign = 'CENTER'
+        #     rtn_content.append(graf)
+        #     rtn_content.append(Spacer(10, 10))
+        
         for año, data_mes in graf_source.items():
-            text = f"Ingresos mensuales para el año {año}"
-            rtn_content.append(Paragraph(text, self.styles['Heading5']))
-            graf = self.crear_grafico_barras(año, data_mes)
-            renderPM.drawToFile(graf, f"resources/images/bar_chart_ingresos_{año}.png", fmt='PNG')
-            image = Image(f"resources/images/bar_chart_ingresos_{año}.png")
+            filename = f"resources/images/bar_chart_ingresos_{año}.png"
+            self.crear_grafico_barras(año, data_mes, filename)  # Llamada a la función para crear y guardar el gráfico
+            image = Image(filename)
             image.hAlign = 'CENTER'
-            rtn_content.append(graf)
+            rtn_content.append(image)  # Agregar la imagen al contenido
             rtn_content.append(Spacer(10, 10))
             
 
