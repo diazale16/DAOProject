@@ -14,7 +14,7 @@ class AdministracionAuto:
         
         self.ventana.geometry(f"1280x720")
         ctk.set_appearance_mode("dark")
-        self.ventana.attributes("-zoomed", True)
+        self.ventana.attributes("-fullscreen", True)
         self.header()
         self.initialize_consulta()
         self.initialize_alta()
