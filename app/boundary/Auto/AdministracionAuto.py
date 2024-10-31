@@ -152,11 +152,11 @@ class AdministracionAuto:
             self.frame_detalle, text=f"Precio: {self.auto_selecc.precio}"
         ).grid(row=2, column=2, padx=10, pady=10, sticky="w")
         self.label_det_estado = ctk.CTkLabel(
-            self.frame_detalle, text=f"Estado: {self.auto_selecc.estado_relacion.nombre}"
+            self.frame_detalle, text=f"Estado: {self.auto_selecc.estado.nombre}"
         ).grid(row=2, column=4, padx=10, pady=10, sticky="w")
         if self.auto_selecc.cliente_id:
             self.label_det_cliente = ctk.CTkLabel(
-                self.frame_detalle, text=f"Cliente ID: {self.auto_selecc.cliente_id} ({self.auto_selecc.cliente_relacion.nombre} {self.auto_selecc.cliente_relacion.apellido})"
+                self.frame_detalle, text=f"Cliente ID: {self.auto_selecc.cliente_id} ({self.auto_selecc.cliente.nombre} {self.auto_selecc.cliente.apellido})"
             ).grid(row=3, column=0, padx=10, pady=10, sticky="w")
 
         self.boton_modificar = ctk.CTkButton(
@@ -196,10 +196,10 @@ class AdministracionAuto:
         self.datos_autos = []
         for auto in self.autos.values():
             if isinstance(auto, Auto):
-                if not (auto.cliente_relacion):
-                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, "")
+                if not (auto.cliente):
+                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado.nombre, "")
                 else:
-                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, auto.cliente_id)
-                    # tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado_relacion.nombre, f"{auto.cliente_relacion.nombre} {auto.cliente_relacion.apellido}", auto)
+                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado.nombre, auto.cliente_id)
+                    # tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado.nombre, f"{auto.cliente.nombre} {auto.cliente.apellido}", auto)
                 self.datos_autos.append(tupla)
 

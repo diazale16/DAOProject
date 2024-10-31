@@ -1,7 +1,7 @@
 
 from datetime import datetime
 from ..persistency.DBManager import DBManager
-from . import GestorAuto, GestorVenta, GestorServicio
+from ..control import GestorAuto, GestorVenta, GestorServicio
 from ..entities.VentaModel import Venta
 from ..entities.ServicioModel import Servicio
 from ..entities.AutoModel import Auto
@@ -51,7 +51,7 @@ class GestorReporte():
     #     auto.modelo = modelo
     #     auto.año = año
     #     auto.precio = precio
-    #     # auto.estado_relacion.nombre = estado
+    #     # auto.estado.nombre = estado
     #     auto.cliente_id = cliente
     #     self.db_manager.update(auto)
 
@@ -69,11 +69,11 @@ class GestorReporte():
     def listar_autos_vendidos(self, id_cliente=None):
         ventas: list[Venta] = self.listar_ventas()
         if id_cliente:
-            return [venta.auto_relacion for venta in ventas if venta.cliente_id == id_cliente]
+            return [venta.auto for venta in ventas if venta.cliente_id == id_cliente]
         else:
-            return [venta.auto_relacion for venta in ventas]
+            return [venta.auto for venta in ventas]
 
     # def listar_autos_vendidos_por_cliente(self, id):
     #     ventas: list[Venta] = self.listar_ventas()
-    #     autos_vendidos = [venta.auto_relacion for venta in ventas if venta.cliente_id == id]
+    #     autos_vendidos = [venta.auto for venta in ventas if venta.cliente_id == id]
     #     return autos_vendidos_cliente

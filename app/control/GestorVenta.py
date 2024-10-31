@@ -14,22 +14,23 @@ class GestorVenta():
     def __init__(self):
         self.db_manager = DBManager()
 
-    def registrar_venta(self, auto: Auto, cliente: Cliente, vendedor: Vendedor):
+    def registrar_venta(self, auto: Auto, cliente: Cliente, vendedor: Vendedor, fecha=None):
         # vars
-        # fecha_venta = datetime.today().strftime("%d/%m/%Y")
-        fecha_venta = datetime.today().date()  # formato fecha YYYY-MM-DD
-        monto_comision = auto.precio * (vendedor.comision / 100)
+        # fecha = datetime.today().strftime("%d/%m/%Y")
+        if not fecha:
+            fecha = datetime.today().date()  # formato fecha YYYY-MM-DD
+
+        monto_comision = auto.precio * (vendedor.porc_comision / 100)
         monto_venta = auto.precio - monto_comision
 
-        # TODO: preguntar si solo los autos vendidos tienen un cliente
         # reg venta
-        venta = Venta(fecha=fecha_venta, auto_vin=auto.vin,
+        venta = Venta(fecha=fecha, auto_vin=auto.vin,
                       cliente_id=cliente.id, vendedor_id=vendedor.id, monto=monto_venta)
         self.db_manager.register(entity=venta)
         # reg comision por venta para el vendedor
         gestor_comision = GestorComision.GestorComision()
         gestor_comision.registrar_comision(monto=monto_comision,
-                                                      fecha=fecha_venta, vendedor_id=vendedor.id)
+                                                      fecha=fecha, vendedor_id=vendedor.id)
         # asignar auto vendido al cliente
         gestor_autos = GestorAuto.GestorAuto()
         gestor_autos.asignar_cliente(vin=auto.vin, id=cliente.id)
@@ -45,7 +46,7 @@ class GestorVenta():
     #     auto.modelo = modelo
     #     auto.año = año
     #     auto.precio = precio
-    #     # auto.estado_relacion.nombre = estado
+    #     # auto.estado.nombre = estado
     #     auto.cliente_id = cliente
     #     self.db_manager.update(auto)
 
@@ -63,11 +64,11 @@ class GestorVenta():
     def listar_autos_vendidos(self, id_cliente=None):
         ventas: list[Venta] = self.listar_ventas()
         if id_cliente:
-            return [venta.auto_relacion for venta in ventas if venta.cliente_id == id_cliente]
+            return [venta.auto for venta in ventas if venta.cliente_id == id_cliente]
         else:
-            return [venta.auto_relacion for venta in ventas]
+            return [venta.auto for venta in ventas]
 
     # def listar_autos_vendidos_por_cliente(self, id):
     #     ventas: list[Venta] = self.listar_ventas()
-    #     autos_vendidos = [venta.auto_relacion for venta in ventas if venta.cliente_id == id]
+    #     autos_vendidos = [venta.auto for venta in ventas if venta.cliente_id == id]
     #     return autos_vendidos_cliente

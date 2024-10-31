@@ -16,4 +16,4 @@ class TipoServicio(Base):
     # vendedor = Column(Float, ForeignKey('vendedores.id'), nullable=False)
 
     # Relación con la entidad Dirección
-    servicio_relacion = relationship('Servicio', back_populates='tipo_servicio_relacion', lazy="joined")
+    servicio = relationship('Servicio', back_populates='tipo_servicio', lazy="joined")

@@ -19,6 +19,7 @@ from app.control import (
     GestorEstado,
 )
 from app.persistency.DBManager import DBManager
+from datetime import datetime
 import random
 
 # global db manager
@@ -191,8 +192,8 @@ def main():
             # Vendedores
             nom_vend = NOMBRES[rand1()]
             apell_vend = APELLIDOS[rand1()]
-            comision = random.randint(1,25)
-            vendedor = vendedor_gestor.registrar_vendedor(nombre=nom_vend, apellido=apell_vend, comision=comision)
+            porc_comision = random.randint(1,25)
+            vendedor = vendedor_gestor.registrar_vendedor(nombre=nom_vend, apellido=apell_vend, porc_comision=porc_comision)
         
         if i%3 == 0:
             # Clientes
@@ -209,7 +210,11 @@ def main():
             # cliente_id = Column(String, ForeignKey('clientes.id'), nullable=False)
             # vendedor_id = Column(String, ForeignKey('vendedores.id'), nullable=False)
             # monto = Column(Float, nullable=False)
-            venta:VentaModel.Vendedor = venta_gestor.registrar_venta(auto=auto, cliente=cliente, vendedor=vendedor)
+            dia = random.randint(1,31)
+            mes = random.randint(1,12)
+            año = random.randint(2023,2024)
+            fecha = datetime.strptime(f"{dia}/{mes}/{año}", "%d/%m/%Y").date()
+            venta:VentaModel.Vendedor = venta_gestor.registrar_venta(auto=auto, cliente=cliente, vendedor=vendedor, fecha=fecha)
             
     ventas:list[VentaModel.Venta] = venta_gestor.listar_ventas()
     for i in range(len(ventas)):
@@ -218,17 +223,21 @@ def main():
             nom_tipo_servicio = "Mantenimiento" if random.randint(0,1) == 0 else "Reparacion"
             tipo_servicio = tipo_servicio_gestor.registrar_tipo_servicio(nombre=nom_tipo_servicio)
             
-            # Servicios    
+            # Servicios
+            dia = random.randint(1,28)
+            mes = random.randint(1,12)
+            año = random.randint(2023,2024)
+            fecha = datetime.strptime(f"{dia}/{mes}/{año}", "%d/%m/%Y").date()
             costo = random.randrange(100000,250000,1)
-            auto:AutoModel.Auto = ventas[i].auto_relacion
-            servicio = servicio_gestor.registrar_servicio(costo=costo, auto=auto, tipo_servicio=tipo_servicio, vendedor=venta.vendedor_relacion)
+            auto:AutoModel.Auto = ventas[i].auto
+            servicio = servicio_gestor.registrar_servicio(costo=costo, auto=auto, tipo_servicio=tipo_servicio, vendedor=venta.vendedor, fecha=fecha)
             print(servicio)
     
     ventas:list[VentaModel.Venta] = venta_gestor.listar_ventas()
     vendedores:list[VendedorModel.Vendedor] = vendedor_gestor.listar_vendedors()
-    print(vendedores[0].comision_relacion)        
+    # print(vendedores[0].comision)        
     autos_vendidos_cliente = venta_gestor.listar_autos_vendidos(id_cliente=cliente.id)
-    print(autos_vendidos_cliente)
+    # print(autos_vendidos_cliente)
     
     
 

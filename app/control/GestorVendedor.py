@@ -8,21 +8,21 @@ class GestorVendedor:
     def __init__(self):
         self.db_manager = DBManager()
 
-    def registrar_vendedor(self, nombre, apellido, comision):
+    def registrar_vendedor(self, nombre, apellido, porc_comision):
         vendedor = Vendedor(
-            nombre=nombre, apellido=apellido, comision=comision)
+            nombre=nombre, apellido=apellido, porc_comision=porc_comision)
         self.db_manager.register(vendedor)
         return vendedor
 
-    def modificar_vendedor(self, id, nombre=None, apellido=None, comision=None):
+    def modificar_vendedor(self, id, nombre=None, apellido=None, porc_comision=None):
         vendedor: Vendedor = self.obtener_vendedor(id)
         if vendedor:
             if nombre:
                 vendedor.nombre = nombre
             if apellido:
                 vendedor.apellido = apellido
-            if comision:
-                vendedor.comision = comision
+            if porc_comision:
+                vendedor.porc_comision = porc_comision
             self.db_manager.update(vendedor)
 
     def obtener_vendedor(self, id):

@@ -17,7 +17,7 @@ class Auto(Base):
     cliente_id = Column(Integer, ForeignKey('clientes.id'), nullable=True)
 
     # Relación con la entidad Dirección
-    cliente_relacion = relationship('Cliente', back_populates='auto_relacion', lazy="joined")
-    estado_relacion = relationship('Estado', back_populates='auto_relacion', lazy="joined")
-    venta_relacion = relationship('Venta', back_populates='auto_relacion', lazy="joined")
-    servicio_relacion = relationship('Servicio', back_populates='auto_relacion', lazy="joined")
+    cliente = relationship('Cliente', back_populates='auto', lazy="joined")
+    estado = relationship('Estado', back_populates='auto', lazy="joined")
+    venta = relationship('Venta', back_populates='auto', lazy="joined")
+    servicio = relationship('Servicio', back_populates='auto', lazy="joined")
