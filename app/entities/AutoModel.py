@@ -20,4 +20,4 @@ class Auto(Base):
     cliente_relacion = relationship('Cliente', back_populates='auto_relacion', lazy="joined")
     estado_relacion = relationship('Estado', back_populates='auto_relacion', lazy="joined")
     venta_relacion = relationship('Venta', back_populates='auto_relacion', lazy="joined")
-    servicio_relacion = relationship('Servicio', back_populates='auto_relacion')
+    servicio_relacion = relationship('Servicio', back_populates='auto_relacion', lazy="joined")

@@ -223,7 +223,10 @@ def main():
             auto:AutoModel.Auto = ventas[i].auto_relacion
             servicio = servicio_gestor.registrar_servicio(costo=costo, auto=auto, tipo_servicio=tipo_servicio, vendedor=venta.vendedor_relacion)
             print(servicio)
-            
+    
+    ventas:list[VentaModel.Venta] = venta_gestor.listar_ventas()
+    vendedores:list[VendedorModel.Vendedor] = vendedor_gestor.listar_vendedors()
+    print(vendedores[0].comision_relacion)        
     autos_vendidos_cliente = venta_gestor.listar_autos_vendidos(id_cliente=cliente.id)
     print(autos_vendidos_cliente)
     

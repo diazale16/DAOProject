@@ -11,7 +11,7 @@ class Vendedor(Base):
     comision = Column(Integer, nullable=False) # Porcentaje de comision asignado al vendedor para las ventas o servicios que logre
 
     # Relación con la entidad Venta
-    venta_relacion = relationship('Venta', back_populates='vendedor_relacion')
-    servicio_relacion = relationship('Servicio', back_populates='vendedor_relacion')
+    venta_relacion = relationship('Venta', back_populates='vendedor_relacion', lazy="joined")
+    servicio_relacion = relationship('Servicio', back_populates='vendedor_relacion', lazy="joined")
     # Relación con la entidad Comision (uno-a-muchos)
-    comision_relacion = relationship('Comision', back_populates='vendedor_relacion') # cascade="all, delete-orphan", lazy="joined"
+    comision_relacion = relationship('Comision', back_populates='vendedor_relacion', lazy="joined") # cascade="all, delete-orphan", lazy="joined"

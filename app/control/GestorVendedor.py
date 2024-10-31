@@ -1,6 +1,7 @@
 # control/GestorVendedor.py
 from ..persistency.DBManager import DBManager
 from ..entities.VendedorModel import Vendedor
+from ..entities.ComisionModel import Comision
 
 
 class GestorVendedor:
@@ -34,3 +35,4 @@ class GestorVendedor:
 
     def listar_vendedors(self):
         return self.db_manager.get_all(entity_class=Vendedor)
+    
