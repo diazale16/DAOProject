@@ -11,8 +11,8 @@ from reportlab.platypus import Paragraph, Spacer
 
 class ReporteVentasPeriodo(ReporteBase.ReporteBase):
     def __init__(self, fecha_desde, fecha_hasta):
-        self.fecha_desde = fecha_desde
-        self.fecha_hasta = fecha_hasta
+        self.fecha_desde = datetime.strptime(fecha_desde, "%d/%m/%Y").date()
+        self.fecha_hasta = datetime.strptime(fecha_hasta, "%d/%m/%Y").date()
         self.fecha_hoy = datetime.today().strftime("%d / %m / %Y")
         self.nom_doc = "reporte_ventas_periodo"
         self.title = f"Reporte de ventas"

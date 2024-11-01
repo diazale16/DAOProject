@@ -85,7 +85,7 @@ class Reportes:
         confirmar_btn.pack(side="left", pady=20, padx=10)
         cerrar_btn = ctk.CTkButton(
             line1_frame, text="Cancelar", fg_color="red", command=modal.destroy)
-        cerrar_btn.pack( side="right", pady=20, padx=10)
+        cerrar_btn.pack(side="right", pady=20, padx=10)
 
     def rp_ventas_periodo(self, modal):
         modal.destroy()
@@ -96,9 +96,11 @@ class Reportes:
         mes_hasta = self.mes_hasta.get()
         ano_hasta = self.ano_hasta.get()
         try:
-            rp_ventas_periodo = ReporteVentasPeriodo.ReporteVentasPeriodo()
-            rp_location = rp_ventas_periodo.generar_reporte(
-                dia_desde, mes_desde, ano_desde, dia_hasta, mes_hasta, ano_hasta)
+            fecha_desde = f"{dia_desde}/{mes_desde}/{ano_desde}"
+            fecha_hasta = f"{dia_hasta}/{mes_hasta}/{ano_hasta}"
+            rp_ventas_periodo = ReporteVentasPeriodo.ReporteVentasPeriodo(
+                fecha_desde, fecha_hasta)
+            rp_location = rp_ventas_periodo.generar_reporte()
             self.mostrar_modal_confirmacion(
                 f"Reporte generado exitosamente. \n Visible en: '{rp_location}'")
         except Exception:
