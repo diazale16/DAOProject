@@ -70,11 +70,14 @@ class DBManager:
         finally:
             session.close()
 
-    def get_all(self, entity_class):
-        session = self.get_session()
-        try:
-            return session.query(entity_class).all()
-        finally:
+    def get_all(self, entity_class, filters=None):
+            session = self.get_session()
+            try:
+                query = session.query(entity_class)
+                if filters:
+                    query = query.filter_by(**filters)
+                return query.all()
+            finally:
                 session.close()
 
     def get_by_id(self, entity_class, entity_id):

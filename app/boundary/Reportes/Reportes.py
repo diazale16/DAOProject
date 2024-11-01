@@ -1,8 +1,5 @@
 import customtkinter as ctk
-from customtkinter import CTkImage
 from ...reports import ReporteIngresosTotales, ReporteVentasAutos, ReporteVentasPeriodo
-from PIL import Image
-import fitz
 
 
 class Reportes:
@@ -35,14 +32,14 @@ class Reportes:
     def initialize_widgets(self):
         line2_frame = ctk.CTkFrame(self.ventana)
         line2_frame.pack(side="top", fill="x", pady=5)
-
         line2_frame.columnconfigure(0, weight=1)
         line2_frame.columnconfigure(1, weight=1)
         line2_frame.columnconfigure(2, weight=1)
-
+        # botones de reportes
         self.rp_ventas_periodo = ctk.CTkButton(
-            line2_frame, text="Reporte de ventas", command=self.rp_ventas_periodo)
-        self.rp_ventas_periodo.grid(row=0, column=0, padx=20, pady=20, sticky="w")
+            line2_frame, text="Reporte de ventas", command=self.mostrar_modal_fechas)
+        self.rp_ventas_periodo.grid(
+            row=0, column=0, padx=20, pady=20, sticky="w")
 
         self.rp_ingresos = ctk.CTkButton(
             line2_frame, text="Reporte de ingresos", command=self.rp_ingresos)
@@ -50,66 +47,90 @@ class Reportes:
 
         self.rp_ventas_autos_marca = ctk.CTkButton(
             line2_frame, text="Reporte de marcas populares", command=self.rp_ventas_autos_marca)
-        self.rp_ventas_autos_marca.grid(row=0, column=2, padx=20, pady=20, sticky="e")
+        self.rp_ventas_autos_marca.grid(
+            row=0, column=2, padx=20, pady=20, sticky="e")
 
     def salir_fullscreen(self, event=None):
         self.ventana.attributes("-fullscreen", False)
         self.ventana.geometry("1280x720")
 
-    def rp_ventas_periodo(self):
-        rp_ventas_periodo = ReporteVentasPeriodo.ReporteVentasPeriodo()
-        rp_location = rp_ventas_periodo.generar_reporte()
-        # self.pdfviewer(rp_location)
+    def mostrar_modal_fechas(self):
+        modal = ctk.CTkToplevel(self.ventana)
+        modal.title("Seleccionar rango de fechas")
+        modal.geometry("400x400")
+        modal.transient(self.ventana)
+        modal.update()
+        modal.grab_set()
+
+        ctk.CTkLabel(modal, text="Fecha Desde").pack(pady=5)
+        self.dia_desde = ctk.CTkEntry(modal, placeholder_text="Día")
+        self.dia_desde.pack(pady=2)
+        self.mes_desde = ctk.CTkEntry(modal, placeholder_text="Mes")
+        self.mes_desde.pack(pady=2)
+        self.ano_desde = ctk.CTkEntry(modal, placeholder_text="Año")
+        self.ano_desde.pack(pady=2)
+
+        ctk.CTkLabel(modal, text="Fecha Hasta").pack(pady=5)
+        self.dia_hasta = ctk.CTkEntry(modal, placeholder_text="Día")
+        self.dia_hasta.pack(pady=2)
+        self.mes_hasta = ctk.CTkEntry(modal, placeholder_text="Mes")
+        self.mes_hasta.pack(pady=2)
+        self.ano_hasta = ctk.CTkEntry(modal, placeholder_text="Año")
+        self.ano_hasta.pack(pady=2)
+
+        line1_frame = ctk.CTkFrame(modal)
+        line1_frame.pack(side="bottom", fill="x", pady=10, padx=10)
+        confirmar_btn = ctk.CTkButton(
+            line1_frame, text="Generar Reporte", command=lambda: self.rp_ventas_periodo(modal))
+        confirmar_btn.pack(side="left", pady=20, padx=10)
+        cerrar_btn = ctk.CTkButton(
+            line1_frame, text="Cancelar", fg_color="red", command=modal.destroy)
+        cerrar_btn.pack( side="right", pady=20, padx=10)
+
+    def rp_ventas_periodo(self, modal):
+        modal.destroy()
+        dia_desde = self.dia_desde.get()
+        mes_desde = self.mes_desde.get()
+        ano_desde = self.ano_desde.get()
+        dia_hasta = self.dia_hasta.get()
+        mes_hasta = self.mes_hasta.get()
+        ano_hasta = self.ano_hasta.get()
+        try:
+            rp_ventas_periodo = ReporteVentasPeriodo.ReporteVentasPeriodo()
+            rp_location = rp_ventas_periodo.generar_reporte(
+                dia_desde, mes_desde, ano_desde, dia_hasta, mes_hasta, ano_hasta)
+            self.mostrar_modal_confirmacion(
+                f"Reporte generado exitosamente. \n Visible en: '{rp_location}'")
+        except Exception:
+            self.mostrar_modal_confirmacion("Error al generar el reporte.")
 
     def rp_ingresos(self):
-        rp_ingresos = ReporteIngresosTotales.ReporteIngresosTotales()
-        rp_location = rp_ingresos.generar_reporte()
-        # self.pdfviewer(rp_location)
+        try:
+            rp_ingresos = ReporteIngresosTotales.ReporteIngresosTotales()
+            rp_location = rp_ingresos.generar_reporte()
+            self.mostrar_modal_confirmacion(
+                f"Reporte generado exitosamente. \n Visible en: '{rp_location}'")
+        except Exception:
+            self.mostrar_modal_confirmacion("Error al generar el reporte.")
 
     def rp_ventas_autos_marca(self):
-        rp_ventas_autos_marca = ReporteVentasAutos.ReporteVentasAutos()
-        rp_location = rp_ventas_autos_marca.generar_reporte()
-        # self.pdfviewer(rp_location)
+        try:
+            rp_ventas_autos_marca = ReporteVentasAutos.ReporteVentasAutos()
+            rp_location = rp_ventas_autos_marca.generar_reporte()
+            self.mostrar_modal_confirmacion(
+                f"Reporte generado exitosamente. \n Visible en: '{rp_location}'")
+        except Exception:
+            self.mostrar_modal_confirmacion("Error al generar el reporte.")
 
-    # def pdfviewer(self, pdf_path):
-    #     self.pdf_document = fitz.open(pdf_path)
-    #     self.current_page = 0
+    def mostrar_modal_confirmacion(self, mensaje):
+        modal = ctk.CTkToplevel(self.ventana)
+        modal.title("Generación de reporte")
+        modal.geometry("600x150")
+        modal.transient(self.ventana)
+        modal.update()
+        modal.grab_set()
 
-    #     self.image_label = ctk.CTkLabel(self.ventana, text="")
-    #     self.image_label.pack(expand=True, fill="both")
-
-    #     self.prev_button = ctk.CTkButton(self.ventana, text="Página Anterior", command=self.previous_page)
-    #     self.prev_button.pack(side="left", padx=10, pady=10)
-    #     self.next_button = ctk.CTkButton(self.ventana, text="Página Siguiente", command=self.next_page)
-    #     self.next_button.pack(side="right", padx=10, pady=10)
-
-    #     self.display_page(self.current_page)
-
-    # def display_page(self, page_num):
-    #     page = self.pdf_document[page_num]
-    #     pix = page.get_pixmap()
-        
-    #     # Asegúrate de que pix no sea None
-    #     if pix is None:
-    #         print("Error: No se pudo obtener la imagen de la página.")
-    #         return
-
-    #     img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-    #     img.thumbnail((800, 600))
-
-    #     # Crea la imagen de CustomTkinter
-    #     self.photo = CTkImage(img)
-        
-    #     # Configura la etiqueta de imagen
-    #     self.image_label.configure(image=self.photo)
-    #     self.image_label.image = self.photo  # Mantén la referencia
-
-    # def next_page(self):
-    #     if self.current_page < self.pdf_document.page_count - 1:
-    #         self.current_page += 1
-    #         self.display_page(self.current_page)
-
-    # def previous_page(self):
-    #     if self.current_page > 0:
-    #         self.current_page -= 1
-    #         self.display_page(self.current_page)
+        label = ctk.CTkLabel(modal, text=mensaje)
+        label.pack(pady=20)
+        cerrar_btn = ctk.CTkButton(modal, text="Cerrar", command=modal.destroy)
+        cerrar_btn.pack(side="bottom", pady=10, padx=20, fill="x")
