@@ -1,23 +1,13 @@
 from . import ReporteBase
 from ..control.GestorVenta import GestorVenta
 from ..entities.VentaModel import Venta
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
 from datetime import datetime
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.platypus.tables import Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
-from reportlab.graphics.shapes import Drawing
-from reportlab.graphics.charts.piecharts import Pie
-from reportlab.graphics import renderPM
-from reportlab.lib import colors
-import os
-from io import BytesIO
+from reportlab.platypus import Paragraph, Spacer, Image
+import matplotlib.pyplot as plt
 
 
 class ReporteVentasAutos(ReporteBase.ReporteBase):
@@ -66,52 +56,17 @@ class ReporteVentasAutos(ReporteBase.ReporteBase):
             data_segregada[v.auto.marca] += 1
         return data_segregada
 
-    def hsl_to_rgb(self, h, s, l):
-        r, g, b = 0, 0, 0
-        if s == 0:  # Achromatic
-            r = g = b = l  # grey
-        else:
-            def hue_to_rgb(p, q, t):
-                if t < 0: t += 1
-                if t > 1: t -= 1
-                if t < 1/6: return p + (q - p) * 6 * t
-                if t < 1/2: return q
-                if t < 2/3: return p + (q - p) * (2/3 - t) * 6
-                return p
-            
-            q = l * (1 + s) if l < 0.5 else l + s - l * s
-            p = 2 * l - q
-            r = hue_to_rgb(p, q, h + 1/3)
-            g = hue_to_rgb(p, q, h)
-            b = hue_to_rgb(p, q, h - 1/3)
-        
-        return colors.Color(r, g, b)
-
-    def crear_grafico_torta(self, data):
+   
+    def crear_grafico_torta(self, data: dict, filename: str):
         labels = list(data.keys())
-        values = list(data.values())
-        
-        grafico = Drawing(200, 200)
-        pie = Pie()
-        pie.x = 50
-        pie.y = 50
-        pie.data = values
-        pie.labels = labels
-        
-        pie.slices.strokeWidth = 0.5
+        sizes = list(data.values())
 
-        # Generar colores dinámicamente
-        num_colors = len(pie.data)
-        for index in range(num_colors):
-            # Calcular el color usando HSL
-            h = index / num_colors  # Matiz basado en el índice
-            s = 0.7  # Saturación
-            l = 0.5  # Luminosidad
-            pie.slices[index].fillColor = self.hsl_to_rgb(h, s, l)
-
-        grafico.add(pie)
-
-        return grafico
+        plt.figure(figsize=(5, 5))
+        plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
+        plt.title("Distribución de autos vendidos por marca")
+        plt.tight_layout()
+        plt.savefig(filename)
+        plt.close()
 
     def construccion_contenido(self):
         rtn_content = []
@@ -132,12 +87,11 @@ class ReporteVentasAutos(ReporteBase.ReporteBase):
                                    ('GRID', (0, 0), (-1, -1), 1, colors.black)]))
         rtn_content.append(table)
         rtn_content.append(Spacer(10, 10))
-        
 
         # graficos
-        graf = self.crear_grafico_torta(marcas_cont)
-        renderPM.drawToFile(graf, "resources/images/pie_chart_marcas.png", fmt='PNG')
-        image = Image("resources/images/pie_chart_marcas.png")
+        filename = f"resources/images/pie_chart_marcas.png"
+        self.crear_grafico_torta(marcas_cont, filename)
+        image = Image(filename)
         image.hAlign = 'CENTER'
         rtn_content.append(image)
 

@@ -1,19 +1,12 @@
 from . import ReporteBase
 from ..control.GestorVenta import GestorVenta
 from ..entities.VentaModel import Venta
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
 from datetime import datetime
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.platypus.tables import Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
-import matplotlib.pyplot as plt
-from io import BytesIO
+from reportlab.platypus import Paragraph, Spacer
 
 
 class ReporteVentasPeriodo(ReporteBase.ReporteBase):
@@ -33,22 +26,22 @@ class ReporteVentasPeriodo(ReporteBase.ReporteBase):
         # Agregar un título
         self.contenido["datos"].append(Paragraph(self.title, styles['Title']))
         self.contenido["datos"].append(Spacer(10, 10))
-        
+
         text = f"Fecha de emisión: [ {self.fecha_hoy} ] "
         self.contenido["datos"].append(Paragraph(text, styles['Heading2']))
-        
+
         fecha_desde_formated = self.fecha_desde.strftime("%d / %m / %Y")
         fecha_hasta_formated = self.fecha_hasta.strftime("%d / %m / %Y")
         text = f"Periodo de búsqueda: [ {fecha_desde_formated} ] - [ {fecha_hasta_formated} ]"
         self.contenido["datos"].append(Paragraph(text, styles['Heading2']))
-        
+
         text = f"Reporte de ventas realizadas en un periodo de tiempo definido."
         self.contenido["datos"].append(Paragraph(text, styles['Normal']))
-        
+
         self.contenido["datos"].append(Spacer(10, 10))
         table = self.construccion_contenido()
         self.contenido["datos"].append(table)
-        
+
         return self.contenido
 
     def get_data(self):
