@@ -30,8 +30,9 @@ class ReporteBase(ABC):
         self.report_path = "resources/reports"
         self.pagesize = A4
         self.contenido = self.obtener_contenido()
-        self.doc = self.crear_reporte(self.report_path, self.contenido["nom_doc"])
+        self.doc, filename = self.crear_reporte(self.report_path, self.contenido["nom_doc"])
         self.guardar_reporte(self.contenido["datos"])
+        return filename
         # self.exponer_reporte()
 
     @abstractmethod
@@ -47,8 +48,9 @@ class ReporteBase(ABC):
         pass
 
     def crear_reporte(self, path, nom_doc):
-        doc = SimpleDocTemplate(f"{path}/{nom_doc}.pdf", pagesize=self.pagesize)
-        return doc
+        filename = f"{path}/{nom_doc}.pdf"
+        doc = SimpleDocTemplate(filename, pagesize=self.pagesize)
+        return doc, filename
 
     def guardar_reporte(self, contenido):
         self.doc.build(contenido)
