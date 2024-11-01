@@ -62,7 +62,7 @@ class ReporteVentasPeriodo(ReporteBase.ReporteBase):
                 f"{venta.cliente.nombre} {venta.cliente.apellido}",
                 f"{venta.vendedor.nombre} {venta.vendedor.apellido}",
                 f"{venta.auto.marca} {venta.auto.modelo} {venta.auto.año}",
-                f"{venta.monto}"
+                f"{round(venta.monto, 2)}"
             ])
         table = Table(data, colWidths=[
                       1 * inch, 1 * inch, 1.2 * inch, 1.2 * inch, 2 * inch, 1.2 * inch])
