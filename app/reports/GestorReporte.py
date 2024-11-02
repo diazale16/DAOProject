@@ -1,8 +1,9 @@
 
 from datetime import datetime
 from ..persistency.DBManager import DBManager
-from . import GestorAuto, GestorComision
+from ..control import GestorAuto, GestorVenta, GestorServicio
 from ..entities.VentaModel import Venta
+from ..entities.ServicioModel import Servicio
 from ..entities.AutoModel import Auto
 from ..entities.ClienteModel import Cliente
 from ..entities.VendedorModel import Vendedor
@@ -10,31 +11,35 @@ from ..entities.ComisionModel import Comision
 from sqlalchemy import Date
 
 
-class GestorVenta():
+class GestorReporte():
     def __init__(self):
         self.db_manager = DBManager()
 
-    def registrar_venta(self, auto: Auto, cliente: Cliente, vendedor: Vendedor, fecha=None):
+    def listar_ventas_periodo(self, fecha_desde:Date, fecha_hasta:Date):
+        # listar ventas
+        gestor_ventas = GestorVenta.GestorVenta()
+        ventas:list[Venta] = gestor_ventas.listar_ventas()
+        ventas_en_periodo = [venta for venta in ventas if (venta.fecha >= fecha_desde and venta.fecha <= fecha_hasta)]
+        return ventas_en_periodo
+    
+    def ingresos_totales(self):
         # vars
-        # fecha = datetime.today().strftime("%d/%m/%Y")
-        if not fecha:
-            fecha = datetime.today().date()  # formato fecha YYYY-MM-DD
+        ingreso_total = ingreso_ventas = ingreso_servicios = 0
+        comisiones = {}
+        # ventas
+        gestor_ventas = GestorVenta.GestorVenta()
+        ventas:list[Venta] = gestor_ventas.listar_ventas()
+        for venta in ventas:
+            ingreso_ventas += venta.monto
+        # servicios
+        gestor_servicio = GestorServicio.GestorServicio()
+        servicios:list[Servicio] = gestor_servicio.listar_servicios()
+        for servicio in servicios:
+            ingreso_servicios += servicio.costo
+        # total
+        ingreso_total = ingreso_ventas + ingreso_servicios
+        return ingreso_total, ingreso_ventas, ingreso_servicios
 
-        monto_comision = auto.precio * (vendedor.porc_comision / 100)
-        monto_venta = auto.precio - monto_comision
-
-        # reg venta
-        venta = Venta(fecha=fecha, auto_vin=auto.vin,
-                      cliente_id=cliente.id, vendedor_id=vendedor.id, monto=monto_venta)
-        self.db_manager.register(entity=venta)
-        # reg comision por venta para el vendedor
-        gestor_comision = GestorComision.GestorComision()
-        gestor_comision.registrar_comision(monto=monto_comision,
-                                                      fecha=fecha, vendedor_id=vendedor.id)
-        # asignar auto vendido al cliente
-        gestor_autos = GestorAuto.GestorAuto()
-        gestor_autos.asignar_cliente(vin=auto.vin, id=cliente.id)
-        return venta
 
     # def modificar_venta(self, vin, marca, modelo, año, precio, estado, cliente):
     #     auto:Auto = self.obtener_venta(vin)
@@ -54,7 +59,7 @@ class GestorVenta():
         return self.db_manager.get_by_id(entity_class=Venta, entity_id=id)
 
     def eliminar_venta(self, id):
-        venta: Venta = self.obtener_venta(id=id)
+        venta:Venta = self.obtener_venta(id=id)
         if venta:
             self.db_manager.delete(entity=venta)
 

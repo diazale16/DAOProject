@@ -5,6 +5,7 @@ from ..entities.ServicioModel import Servicio
 from ..entities.VendedorModel import Vendedor
 from ..entities.ComisionModel import Comision
 from ..entities.AutoModel import Auto
+from . import GestorComision
 from ..entities.TipoServicioModel import TipoServicio
 
 
@@ -12,26 +13,27 @@ class GestorServicio:
     def __init__(self):
         self.db_manager = DBManager()
 
-    def registrar_servicio(self, costo, auto: Auto, tipo_servicio: TipoServicio, vendedor: Vendedor):
+    def registrar_servicio(self, costo, auto: Auto, tipo_servicio: TipoServicio, vendedor: Vendedor, fecha=None):
         # vars
-        fecha_servicio = datetime.today().date()  # formato fecha YYYY-MM-DD
-        monto_comision = costo * (vendedor.comision / 100)
+        if not fecha:
+            fecha = datetime.today().date()  # formato fecha YYYY-MM-DD
+        monto_comision = costo * (vendedor.porc_comision / 100)
         monto_servicio = costo - monto_comision
         # servicio
-        servicio = Servicio(fecha_servicio=fecha_servicio, costo=monto_servicio,
+        servicio = Servicio(fecha=fecha, costo=monto_servicio,
                             auto_vin=auto.vin, tipo_servicio_id=tipo_servicio.id, vendedor_id=vendedor.id)
         self.db_manager.register(entity=servicio)
-        # comision por venta para el vendedor
-        comision = Comision(monto=monto_comision,
-                            fecha=fecha_servicio, vendedor_id=vendedor.id)
-        self.db_manager.register(entity=comision)
+        # reg comision por venta para el vendedor
+        gestor_comision = GestorComision.GestorComision()
+        gestor_comision.registrar_comision(
+            monto=monto_comision, fecha=fecha, vendedor_id=vendedor.id)
         return servicio
 
-    # def modificar_servicio(self, id_servicio, fecha_servicio=None, costo=None, auto_vin=None, tipo_servicio_id=None):
+    # def modificar_servicio(self, id_servicio, fecha=None, costo=None, auto_vin=None, tipo_servicio_id=None):
     #     servicio = self.servicio_service.obtener_servicio(id_servicio)
     #     if servicio:
-    #         if fecha_servicio:
-    #             servicio.fecha_servicio = fecha_servicio
+    #         if fecha:
+    #             servicio.fecha = fecha
     #         if costo is not None:
     #             servicio.costo = costo
     #         if auto_vin:
