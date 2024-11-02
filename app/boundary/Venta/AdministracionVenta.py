@@ -3,6 +3,8 @@ from tkinter import ttk
 from ...control.GestorVenta import GestorVenta
 from ...control.GestorAuto import GestorAuto
 from ...control.GestorCliente import GestorCliente
+from .ModificacionVenta import ModificacionVenta
+
 
 class AdministracionVenta:
     def __init__(self, home_instance):

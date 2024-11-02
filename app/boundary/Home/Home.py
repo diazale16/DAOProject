@@ -6,6 +6,7 @@ from ..Venta.AdministracionVenta import AdministracionVenta
 from ..Cliente.AdministracionCliente import AdministracionCliente
 from ..Servicio.AdministracionServicio import AdministracionServicio
 
+
 class Home:
     def __init__(self):    
         ctk.set_appearance_mode("dark")
