@@ -4,12 +4,6 @@ from ...control.GestorVenta import GestorVenta
 from ...control.GestorAuto import GestorAuto
 from ...control.GestorCliente import GestorCliente
 
-import customtkinter as ctk
-from tkinter import ttk
-from ...control.GestorVenta import GestorVenta
-from ...control.GestorAuto import GestorAuto
-from ...control.GestorCliente import GestorCliente
-
 class AdministracionVenta:
     def __init__(self, home_instance):
         self.gestor_venta = GestorVenta()
@@ -18,15 +12,16 @@ class AdministracionVenta:
         self.home_instance = home_instance
         self.ventana = ctk.CTkToplevel()
         
-        self.ventana.geometry("1280x720")  # Ajustar la geometría manualmente
+        # Configuraciones generales de la ventana
+        self.ventana.geometry("1280x720")  
         ctk.set_appearance_mode("dark")
-        self.ventana.state("zoomed")  # Maximizar la ventana sin usar -zoomed
+        self.ventana.state("zoomed")
         
+        # Inicializar los componentes de la interfaz
         self.header()
         self.initialize_consulta()
         self.initialize_registro()
 
-        
     def home(self):
         self.ventana.destroy()
         self.home_instance.ventana.deiconify()
@@ -63,6 +58,10 @@ class AdministracionVenta:
         self.tree.heading("Vendedor", text="Vendedor")
         self.tree.pack(side="top", fill="both", expand=True)
         
+        # Botón de modificación ubicado debajo de la tabla
+        self.boton_modificar = ctk.CTkButton(self.frame_lista, text="Modificar Venta", command=self.modificar_venta)
+        self.boton_modificar.pack(side="bottom", fill="x", padx=10, pady=5)
+
         self.rellenar_tabla()
 
     def rellenar_tabla(self):
@@ -71,7 +70,16 @@ class AdministracionVenta:
         
         # Relleno de la tabla con los datos de las ventas
         for venta in self.ventas:
-            self.tree.insert("", "end", values=venta)
+            # Extraemos los valores que queremos mostrar en la tabla
+            venta_id = venta.id
+            fecha = venta.fecha.strftime("%d/%m/%Y")  # Formateo de la fecha si es necesario
+            auto = venta.auto_vin  # VIN del auto
+            cliente = venta.cliente_id  # ID del cliente
+            vendedor = venta.vendedor_id  # ID del vendedor
+            
+            # Insertamos estos valores en la tabla
+            self.tree.insert("", "end", values=(venta_id, fecha, auto, cliente, vendedor))
+
 
     def initialize_registro(self):
         self.frame_registro = ctk.CTkFrame(self.ventana)
@@ -93,10 +101,35 @@ class AdministracionVenta:
         self.label_fecha = ctk.CTkLabel(self.frame_registro, text="Fecha:").grid(row=3, column=0, padx=10, pady=10, sticky="w")
         self.entry_fecha = ctk.CTkEntry(self.frame_registro)
         self.entry_fecha.grid(row=3, column=1, padx=10, pady=10)
-        
-        # Botón para registrar una nueva venta
-        self.boton_registrar = ctk.CTkButton(self.frame_registro, text="Registrar Venta", command=self.registrar_venta)
-        self.boton_registrar.grid(row=4, column=0, columnspan=2, padx=10, pady=20)
+
+        # Frame para los botones de "Eliminar" y "Registrar" debajo de los campos de entrada
+        self.frame_botones = ctk.CTkFrame(self.frame_registro)
+        self.frame_botones.grid(row=4, column=0, columnspan=2, pady=10)
+
+        # Botón "Eliminar Venta"
+        self.boton_eliminar = ctk.CTkButton(
+            self.frame_botones,
+            text="Eliminar Venta",
+            command=self.eliminar_venta,
+            fg_color="red",
+            height=40,
+            width=120,
+            corner_radius=10
+        )
+        self.boton_eliminar.grid(row=0, column=0, padx=10)
+
+        # Botón "Registrar Venta" al lado de "Eliminar Venta"
+        self.boton_registrar = ctk.CTkButton(
+            self.frame_botones,
+            text="Registrar Venta",
+            command=self.registrar_venta,
+            fg_color="#FF5733",
+            height=40,
+            width=120,
+            corner_radius=10,
+            text_color="#FFFFFF"
+        )
+        self.boton_registrar.grid(row=0, column=1, padx=10)
 
     def registrar_venta(self):
         vin = self.entry_vin.get()
@@ -123,32 +156,8 @@ class AdministracionVenta:
         except Exception as e:
             print(f"Error al registrar la venta: {e}")
 
-
     def listar_ventas(self):
         self.ventas = self.gestor_venta.listar_ventas()
-
-    
-    def initialize_consulta(self):
-        self.frame_lista = ctk.CTkFrame(self.ventana)
-        self.frame_lista.pack(side="top", fill="both", padx=10, pady=10, expand=True)
-        
-        # Configuración de la tabla de ventas
-        self.tree = ttk.Treeview(
-            self.frame_lista,
-            columns=("ID", "Fecha", "Auto", "Cliente", "Vendedor"),
-            show="headings",
-        )
-        self.tree.heading("ID", text="ID")
-        self.tree.heading("Fecha", text="Fecha")
-        self.tree.heading("Auto", text="Auto")
-        self.tree.heading("Cliente", text="Cliente")
-        self.tree.heading("Vendedor", text="Vendedor")
-        self.tree.pack(side="top", fill="both", expand=True)
-        
-        self.boton_modificar = ctk.CTkButton(self.frame_lista, text="Modificar Venta", command=self.modificar_venta)
-        self.boton_modificar.pack(side="bottom", fill="x", padx=10, pady=10)
-
-        self.rellenar_tabla()
 
     def modificar_venta(self):
         item = self.tree.selection()
@@ -158,3 +167,18 @@ class AdministracionVenta:
             mod_venta.show()
         else:
             print("Por favor, seleccione una venta para modificar.")
+    
+    def eliminar_venta(self):
+        item = self.tree.selection()
+        if item:
+            venta_seleccionada = self.tree.item(item, "values")
+            venta_id = venta_seleccionada[0]
+            try:
+                # Llamar al método del gestor para eliminar la venta
+                self.gestor_venta.eliminar_venta(venta_id)
+                print("Venta eliminada con éxito.")
+                self.rellenar_tabla()  # Refrescar la tabla después de eliminar la venta
+            except Exception as e:
+                print(f"Error al eliminar la venta: {e}")
+        else:
+            print("Por favor, seleccione una venta para eliminar.")

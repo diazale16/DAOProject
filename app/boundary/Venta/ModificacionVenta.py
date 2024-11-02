@@ -65,3 +65,6 @@ class ModificacionVenta:
 
     def show(self):
         self.ventana.mainloop()
+
+
+
