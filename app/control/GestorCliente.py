@@ -13,7 +13,7 @@ class GestorCliente():
         self.db_manager.register(entity=cliente)
         return cliente
 
-    def modificar_cliente(self, id, nombre=None, apellido=None, telefono=None, direccion=None):
+    def modificar_cliente(self, id, nombre=None, apellido=None, direccion=None, telefono=None):
         cliente: Cliente = self.obtener_cliente(id=id)
         if cliente:
             # cliente

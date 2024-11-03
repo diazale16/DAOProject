@@ -1,5 +1,6 @@
 import customtkinter as ctk
-from tkinter import ttk
+from tkinter import ttk, messagebox
+from ...entities.ClienteModel import Cliente
 from ...control.GestorCliente import GestorCliente
 from . import ModificacionCliente
 
@@ -16,6 +17,7 @@ class AdministracionCliente:
         self.header()
         self.initialize_consulta()
         self.initialize_alta()
+        self.initialize_detalle()
         
     def home(self):
         self.ventana.destroy()
@@ -52,10 +54,6 @@ class AdministracionCliente:
         self.tree.heading("Dirección", text="Dirección")
         self.tree.heading("Telefono", text="Teléfono")
         self.tree.pack(side="top", fill="both", expand=True)
-        
-        # Botón para modificar un cliente
-        self.boton_modificar = ctk.CTkButton(self.frame_lista, text="Modificar Cliente", command=self.modificar_cliente)
-        self.boton_modificar.pack(side="bottom", fill="x", padx=10, pady=10)
 
         self.rellenar_tabla()
 
@@ -64,7 +62,7 @@ class AdministracionCliente:
         self.tree.delete(*self.tree.get_children())
         
         # Relleno de la tabla con los datos de los clientes
-        for cliente in self.clientes:
+        for cliente in self.datos_cliente:
             self.tree.insert("", "end", values=cliente)
 
     def initialize_alta(self):
@@ -80,9 +78,19 @@ class AdministracionCliente:
         self.entry_apellido = ctk.CTkEntry(self.frame_alta)
         self.entry_apellido.grid(row=1, column=1, padx=10, pady=10)
 
-        self.label_email = ctk.CTkLabel(self.frame_alta, text="Email:").grid(row=2, column=0, padx=10, pady=10, sticky="w")
-        self.entry_email = ctk.CTkEntry(self.frame_alta)
-        self.entry_email.grid(row=2, column=1, padx=10, pady=10)
+        # Campos para la dirección
+        self.label_calle = ctk.CTkLabel(self.frame_alta, text="Calle:").grid(row=2, column=0, padx=10, pady=10, sticky="w")
+        self.entry_calle = ctk.CTkEntry(self.frame_alta)
+        self.entry_calle.grid(row=2, column=1, padx=10, pady=10)
+
+        self.label_numero = ctk.CTkLabel(self.frame_alta, text="Número:").grid(row=2, column=2, padx=10, pady=10, sticky="w")
+        self.entry_numero = ctk.CTkEntry(self.frame_alta)
+        self.entry_numero.grid(row=2, column=3, padx=10, pady=10)
+
+        self.label_localidad = ctk.CTkLabel(self.frame_alta, text="Localidad:").grid(row=2, column=4, padx=10, pady=10, sticky="w")
+        self.entry_localidad = ctk.CTkEntry(self.frame_alta)
+        self.entry_localidad.grid(row=2, column=5, padx=10, pady=10)
+
 
         self.label_telefono = ctk.CTkLabel(self.frame_alta, text="Teléfono:").grid(row=3, column=0, padx=10, pady=10, sticky="w")
         self.entry_telefono = ctk.CTkEntry(self.frame_alta)
@@ -92,25 +100,88 @@ class AdministracionCliente:
         self.boton_registrar = ctk.CTkButton(self.frame_alta, text="Registrar Cliente", command=self.registrar_cliente)
         self.boton_registrar.grid(row=4, column=0, columnspan=2, padx=10, pady=20)
 
+    def initialize_detalle(self):
+        self.frame_detalle = ctk.CTkFrame(self.ventana)
+        self.frame_detalle.pack(
+            side="right", fill="both", padx=10, pady=10, expand=True
+        )
+        self.tree.bind("<<TreeviewSelect>>", self.mostrar_detalles)
+
+    def mostrar_detalles(self, event):
+        item_selecc = self.tree.selection()
+        if item_selecc:
+            self.cliente_selecc = self.tree.item(item_selecc, "values")
+        self.label_det_vin = ctk.CTkLabel(
+            self.frame_detalle, text=f"Código VIN: {self.cliente_selecc[0]}"
+        ).grid(row=1, column=0, padx=10, pady=10, sticky="w")
+        self.label_det_nombre = ctk.CTkLabel(
+            self.frame_detalle, text=f"Nombre: {self.cliente_selecc[1]}"
+        ).grid(row=1, column=2, padx=10, pady=10, sticky="w")
+        self.label_det_apellido = ctk.CTkLabel(
+            self.frame_detalle, text=f"Apellido: {self.cliente_selecc[2]}"
+        ).grid(row=1, column=4, padx=10, pady=10, sticky="w")
+        self.label_det_email = ctk.CTkLabel(
+            self.frame_detalle, text=f"Email: {self.cliente_selecc[3]}"
+        ).grid(row=2, column=0, padx=10, pady=10, sticky="w")
+        self.label_det_telefono = ctk.CTkLabel(
+            self.frame_detalle, text=f"Telefono: {self.cliente_selecc[4]}"
+        ).grid(row=2, column=2, padx=10, pady=10, sticky="w")
+
+        self.boton_modificar = ctk.CTkButton(
+            self.frame_detalle, text="Modificar Cliente", command=self.modificar_cliente
+        ).grid(row=5, column=0, columnspan=2, padx=10, pady=20)
+        self.boton_eliminar = ctk.CTkButton(
+            self.frame_detalle, text="Eliminar Cliente", command=self.eliminar_cliente
+        ).grid(row=5, column=1, columnspan=2, padx=10, pady=20)
+
     def registrar_cliente(self):
         nombre = self.entry_nombre.get()
         apellido = self.entry_apellido.get()
-        email = self.entry_email.get()
+        calle = self.entry_calle.get()
+        numero = self.entry_numero.get()
+        localidad = self.entry_localidad.get()
         telefono = self.entry_telefono.get()
         
+        # Validación de campos vacíos
+        if not nombre or not apellido or not calle or not numero or not localidad or not telefono:
+            messagebox.showwarning("Campos incompletos", "Por favor, complete todos los campos antes de registrar el cliente.")
+            return
+
+        # Concatenar la dirección
+        direccion = f"{calle}, {numero}, {localidad}"
+
         # Llamada al gestor para registrar el cliente
-        self.gestor_cliente.registrar_cliente(nombre, apellido, email, telefono)
+        self.gestor_cliente.registrar_cliente(nombre, apellido, telefono, direccion)
         
+         # Limpiar los campos de entrada solo si el registro fue exitoso
+        self.entry_nombre.delete(0, 'end')
+        self.entry_apellido.delete(0, 'end')
+        self.entry_calle.delete(0, 'end')
+        self.entry_numero.delete(0, 'end')
+        self.entry_localidad.delete(0, 'end')
+        self.entry_telefono.delete(0, 'end')
+
         # Refrescar la tabla después de registrar el cliente
         self.rellenar_tabla()
 
+    def eliminar_cliente(self):
+        confirm = messagebox.askyesno("Confirmar Eliminación", "¿Está seguro de que desea eliminar este cliente?")
+        if confirm:
+            try:
+                self.gestor_cliente.eliminar_cliente(self.cliente_selecc[0])
+                self.rellenar_tabla() 
+            except Exception as e:
+                messagebox.showerror("Error", f"No se pudo eliminar el cliente: {str(e)}")
+    
     def listar_clientes(self):
-        self.clientes = self.gestor_cliente.listar_clientes()
+        data:list[Cliente] = self.gestor_cliente.listar_clientes()
+        self.cliente = {cliente.id: cliente for cliente in data}
+        self.datos_cliente = []
+        for cliente in self.cliente.values():
+            if isinstance(cliente, Cliente):
+                    tupla = (cliente.id, cliente.nombre, cliente.apellido, cliente.direccion, cliente.telefono)
+            self.datos_cliente.append(tupla)
 
     def modificar_cliente(self):
-        # Obtiene el cliente seleccionado
-        item = self.tree.selection()
-        if item:
-            cliente_selecc = self.tree.item(item, "values")
-            mod_cliente = ModificacionCliente.ModificacionCliente(self.ventana, cliente_selecc)
-            mod_cliente.show()
+        mod_cliente = ModificacionCliente.ModificacionCliente(self.ventana, self.cliente_selecc) 
+        mod_cliente.show()
