@@ -26,6 +26,7 @@ class AdministracionVenta:
         self.initialize_consulta()
         self.initialize_registro()
 
+
         
     def home(self):
         self.ventana.destroy()
@@ -78,9 +79,11 @@ class AdministracionVenta:
         self.frame_registro.pack(side="left", fill="both", padx=10, pady=10, expand=True)
         
         # Configuración de campos para el registro de una nueva venta
-        self.label_vin = ctk.CTkLabel(self.frame_registro, text="Código VIN:").grid(row=0, column=0, padx=10, pady=10, sticky="w")
-        self.entry_vin = ctk.CTkEntry(self.frame_registro)
-        self.entry_vin.grid(row=0, column=1, padx=10, pady=10)
+        self.entry_auto_vin = ttk.Combobox(self.frame_registro, text="VIN:")
+        self.entry_auto_vin['values'] = self.obtener_lista_autos()  # Llenar con la lista de VINs
+        self.entry_auto_vin.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+        self.entry_auto_vin.config(width=30)
 
         self.label_cliente = ctk.CTkLabel(self.frame_registro, text="ID Cliente:").grid(row=1, column=0, padx=10, pady=10, sticky="w")
         self.entry_cliente = ctk.CTkEntry(self.frame_registro)
@@ -99,7 +102,7 @@ class AdministracionVenta:
         self.boton_registrar.grid(row=4, column=0, columnspan=2, padx=10, pady=20)
 
     def registrar_venta(self):
-        vin = self.entry_vin.get()
+        vin = self.entry_auto_vin.get()
         cliente = self.entry_cliente.get()
         vendedor = self.entry_vendedor.get()
         fecha = self.entry_fecha.get()

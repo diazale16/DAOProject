@@ -121,7 +121,7 @@ class AdministracionCliente:
             self.frame_detalle, text=f"Apellido: {self.cliente_selecc[2]}"
         ).grid(row=1, column=4, padx=10, pady=10, sticky="w")
         self.label_det_email = ctk.CTkLabel(
-            self.frame_detalle, text=f"Email: {self.cliente_selecc[3]}"
+            self.frame_detalle, text=f"Calle: {self.cliente_selecc[3]}"
         ).grid(row=2, column=0, padx=10, pady=10, sticky="w")
         self.label_det_telefono = ctk.CTkLabel(
             self.frame_detalle, text=f"Telefono: {self.cliente_selecc[4]}"

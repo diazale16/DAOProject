@@ -7,22 +7,40 @@ from ..entities.ComisionModel import Comision
 from ..entities.AutoModel import Auto
 from . import GestorComision
 from ..entities.TipoServicioModel import TipoServicio
+from . import GestorAuto
+from . import GestorTipoServicio
+from . import GestorVendedor
 
 
 class GestorServicio:
     def __init__(self):
         self.db_manager = DBManager()
 
-    def registrar_servicio(self, costo, auto: Auto, tipo_servicio: TipoServicio, vendedor: Vendedor, fecha=None):
+    def registrar_servicio(self, costo: float, auto_vin , tipo_servicio, vendedor_id: Vendedor, fecha=None):
         # vars
         if not fecha:
             fecha = datetime.today().date()  # formato fecha YYYY-MM-DD
+        else:
+            fecha = datetime.strptime(fecha, '%Y-%m-%d').date()
+
+        gestor_vendedor = GestorVendedor.GestorVendedor()
+        vendedor = gestor_vendedor.obtener_vendedor(vendedor_id)
+
         monto_comision = costo * (vendedor.porc_comision / 100)
         monto_servicio = costo - monto_comision
+        #auto
+        gestor_auto = GestorAuto.GestorAuto()
+        auto = gestor_auto.obtener_auto(vin=auto_vin)
+        #tipo servicio
+        gestor_servicio = GestorTipoServicio.GestorTipoServicio()
+        tipo = gestor_servicio.registrar_tipo_servicio(tipo_servicio)
+
         # servicio
         servicio = Servicio(fecha=fecha, costo=monto_servicio,
-                            auto_vin=auto.vin, tipo_servicio_id=tipo_servicio.id, vendedor_id=vendedor.id)
+                            auto_vin=auto.vin, tipo_servicio_id=tipo.id, vendedor_id=vendedor.id)
         self.db_manager.register(entity=servicio)
+ 
+
         # reg comision por venta para el vendedor
         gestor_comision = GestorComision.GestorComision()
         gestor_comision.registrar_comision(
@@ -52,3 +70,9 @@ class GestorServicio:
 
     def listar_servicios(self):
         return self.db_manager.get_all(entity_class=Servicio)
+    
+    def obtener_servicios_por_auto(self, auto_vin):
+        # Consulta para obtener todos los servicios que están asociados al auto VIN
+        servicios = self.db_manager.get_session().query(Servicio).filter(Servicio.auto_vin == auto_vin).all()
+
+        return servicios
