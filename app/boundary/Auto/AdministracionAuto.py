@@ -11,7 +11,7 @@ class AdministracionAuto:
         self.gestor_auto = GestorAuto()
         self.home_instance = home_instance
         self.ventana = ctk.CTkToplevel()
-        
+
         self.ventana.geometry(f"1280x720")
         ctk.set_appearance_mode("dark")
         self.ventana.attributes("-zoomed", True)
@@ -19,11 +19,11 @@ class AdministracionAuto:
         self.initialize_consulta()
         self.initialize_alta()
         self.initialize_detalle()
-        
+
     def home(self):
         self.ventana.destroy()
         self.home_instance.ventana.deiconify()
-        
+
     def show(self):
         self.ventana.mainloop()
 
@@ -130,7 +130,7 @@ class AdministracionAuto:
             side="right", fill="both", padx=10, pady=10, expand=True
         )
         self.tree.bind("<<TreeviewSelect>>", self.mostrar_detalles)
-        
+
     def mostrar_detalles(self, event):
         item_selecc = self.tree.selection()
         if item_selecc:
@@ -166,7 +166,6 @@ class AdministracionAuto:
             self.frame_detalle, text="Eliminar Auto", command=self.eliminar_auto
         ).grid(row=5, column=1, columnspan=2, padx=10, pady=20)
 
-
     def registrar_auto(self):
         self.vin = self.entry_vin.get()
         self.marca = self.entry_marca.get()
@@ -175,24 +174,28 @@ class AdministracionAuto:
         self.precio = self.entry_precio.get()
         self.estado = self.estado_var.get()
         self.cliente = self.entry_cliente.get() if self.entry_cliente.get() else None
-        
+
         # Validación de campos vacíos
         if not self.vin or not self.marca or not self.modelo or not self.año or not self.precio or not self.estado:
-            messagebox.showwarning("Campos incompletos", "Por favor, complete todos los campos antes de registrar el cliente.")
+            messagebox.showwarning(
+                "Campos incompletos", "Por favor, complete todos los campos antes de registrar el cliente.")
             return
-        
+
         if self.vin in [auto.vin for auto in self.autos.values()]:
             self.mostrar_modal_confirmacion("Ya existe un auto con este VIN.")
             return
         try:
-            self.gestor_auto.registrar_auto(vin=self.vin, marca=self.marca, modelo=self.modelo, año=self.año, precio=self.precio, nom_estado=self.estado, cliente=self.cliente)
+            self.gestor_auto.registrar_auto(vin=self.vin, marca=self.marca, modelo=self.modelo,
+                                            año=self.año, precio=self.precio, nom_estado=self.estado, cliente=self.cliente)
             self.rellenar_tabla()
-            self.mostrar_modal_confirmacion(f"El auto se registro correctamente.")
+            self.mostrar_modal_confirmacion(
+                f"El auto se registro correctamente.")
         except Exception:
             self.mostrar_modal_confirmacion(f"Error al registrar el auto.")
 
     def modificar_auto(self):
-        mod_auto = ModificacionAuto.ModificacionAuto(self.ventana, self.auto_selecc) 
+        mod_auto = ModificacionAuto.ModificacionAuto(
+            self.ventana, self.auto_selecc)
         mod_auto.show()
         # auto = Auto(vin=self.auto_selecc[0], marca=self.auto_selecc[1], modelo=self.auto_selecc[2], año=self.auto_selecc[3], precio=self.auto_selecc[4], estado_id=self.auto_selecc[5], cliente_id=self.auto_selecc[6])
         # print(auto)
@@ -200,22 +203,28 @@ class AdministracionAuto:
         # print(self.auto_selecc)
 
     def eliminar_auto(self):
-        self.gestor_auto.eliminar_auto(self.auto_selecc.vin)
-        self.rellenar_tabla()
-    
+        response = self.gestor_auto.eliminar_auto(self.auto_selecc.vin)
+        if response:
+            self.mostrar_modal_confirmacion("Se elimino correctamente.")
+            self.rellenar_tabla()
+            return
+        self.mostrar_modal_confirmacion("No se pudo.")
+
     def listar_autos(self):
-        data:list[Auto] = self.gestor_auto.listar_autos()
+        data: list[Auto] = self.gestor_auto.listar_autos()
         self.autos = {auto.vin: auto for auto in data}
         self.datos_autos = []
         for auto in self.autos.values():
             if isinstance(auto, Auto):
                 if not (auto.cliente):
-                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado.nombre, "")
+                    tupla = (auto.vin, auto.marca, auto.modelo,
+                             auto.año, auto.precio, auto.estado.nombre, "")
                 else:
-                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado.nombre, auto.cliente_id)
+                    tupla = (auto.vin, auto.marca, auto.modelo, auto.año,
+                             auto.precio, auto.estado.nombre, auto.cliente_id)
                     # tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado.nombre, f"{auto.cliente.nombre} {auto.cliente.apellido}", auto)
                 self.datos_autos.append(tupla)
-                
+
     def mostrar_modal_confirmacion(self, mensaje):
         self.modal = ctk.CTkToplevel(self.ventana)
         self.modal.title("Regisro de venta")
@@ -226,6 +235,6 @@ class AdministracionAuto:
 
         label = ctk.CTkLabel(self.modal, text=mensaje)
         label.pack(pady=20)
-        cerrar_btn = ctk.CTkButton(self.modal, text="Cerrar", command=self.modal.destroy)
+        cerrar_btn = ctk.CTkButton(
+            self.modal, text="Cerrar", command=self.modal.destroy)
         cerrar_btn.pack(side="bottom", pady=10, padx=20, fill="x")
-

@@ -168,8 +168,12 @@ class AdministracionCliente:
         confirm = messagebox.askyesno("Confirmar Eliminación", "¿Está seguro de que desea eliminar este cliente?")
         if confirm:
             try:
-                self.gestor_cliente.eliminar_cliente(self.cliente_selecc[0])
-                self.rellenar_tabla() 
+                response = self.gestor_cliente.eliminar_cliente(self.cliente_selecc[0])
+                if response:
+                    self.mostrar_modal_confirmacion("Se elimino correctamente")
+                    self.rellenar_tabla()
+                    return
+                self.mostrar_modal_confirmacion("No se pudo") 
             except Exception as e:
                 messagebox.showerror("Error", f"No se pudo eliminar el cliente: {str(e)}")
     
@@ -185,3 +189,17 @@ class AdministracionCliente:
     def modificar_cliente(self):
         mod_cliente = ModificacionCliente.ModificacionCliente(self.ventana, self.cliente_selecc) 
         mod_cliente.show()
+
+    def mostrar_modal_confirmacion(self, mensaje):
+        self.modal = ctk.CTkToplevel(self.ventana)
+        self.modal.title("Regisro de venta")
+        self.modal.geometry("600x150")
+        self.modal.transient(self.ventana)
+        self.modal.update()
+        self.modal.grab_set()
+
+        label = ctk.CTkLabel(self.modal, text=mensaje)
+        label.pack(pady=20)
+        cerrar_btn = ctk.CTkButton(
+            self.modal, text="Cerrar", command=self.modal.destroy)
+        cerrar_btn.pack(side="bottom", pady=10, padx=20, fill="x")

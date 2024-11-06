@@ -1,5 +1,5 @@
 from ..persistency.DBManager import DBManager
-from . import GestorEstado, GestorCliente
+from . import GestorEstado, GestorCliente, GestorVenta
 from ..entities.AutoModel import Auto
 from ..entities.ClienteModel import Cliente
 
@@ -46,11 +46,13 @@ class GestorAuto():
 
     def eliminar_auto(self, vin):
         auto: Auto = self.obtener_auto(vin=vin)
-        if auto:
+        if auto and not len(auto.venta) > 0:
             gestor_estado = GestorEstado.GestorEstado()
             gestor_estado.eliminar_estado(id=auto.estado_id)
             self.db_manager.delete(entity=auto)
-
+            return True
+        return None
+                
     def listar_autos(self):
         return self.db_manager.get_all(entity_class=Auto)
     

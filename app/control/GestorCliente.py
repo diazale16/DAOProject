@@ -32,8 +32,10 @@ class GestorCliente():
 
     def eliminar_cliente(self, id):
         cliente: Cliente = self.obtener_cliente(id=id)
-        if cliente:
+        if cliente and not len(cliente.venta) > 0:
             self.db_manager.delete(entity=cliente)
+            return True
+        return None
 
     def listar_clientes(self):
         return self.db_manager.get_all(entity_class=Cliente)
