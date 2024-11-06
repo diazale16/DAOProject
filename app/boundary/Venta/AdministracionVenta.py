@@ -1,10 +1,10 @@
 import customtkinter as ctk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from ...control.GestorVenta import GestorVenta
 from ...control.GestorAuto import GestorAuto
 from ...control.GestorCliente import GestorCliente
 from .ModificacionVenta import ModificacionVenta
-
+from datetime import datetime
 
 class AdministracionVenta:
     def __init__(self, home_instance):
@@ -50,14 +50,14 @@ class AdministracionVenta:
         # Configuración de la tabla de ventas
         self.tree = ttk.Treeview(
             self.frame_lista,
-            columns=("ID", "Fecha", "Auto", "Cliente", "Vendedor"),
+            columns=("Id Venta", "Fecha Venta", "VIN Auto", "Id Cliente", "Id Vendedor"),
             show="headings",
         )
-        self.tree.heading("ID", text="ID")
-        self.tree.heading("Fecha", text="Fecha")
-        self.tree.heading("Auto", text="Auto")
-        self.tree.heading("Cliente", text="Cliente")
-        self.tree.heading("Vendedor", text="Vendedor")
+        self.tree.heading("Id Venta", text="Id Venta")
+        self.tree.heading("Fecha Venta", text="Fecha Venta")
+        self.tree.heading("VIN Auto", text="VIN Auto")
+        self.tree.heading("Id Cliente", text="Id Cliente")
+        self.tree.heading("Id Vendedor", text="Id Vendedor")
         self.tree.pack(side="top", fill="both", expand=True)
         
         # Botón de modificación ubicado debajo de la tabla
@@ -72,16 +72,13 @@ class AdministracionVenta:
         
         # Relleno de la tabla con los datos de las ventas
         for venta in self.ventas:
-            # Extraemos los valores que queremos mostrar en la tabla
             venta_id = venta.id
             fecha = venta.fecha.strftime("%d/%m/%Y")  # Formateo de la fecha si es necesario
             auto = venta.auto_vin  # VIN del auto
             cliente = venta.cliente_id  # ID del cliente
             vendedor = venta.vendedor_id  # ID del vendedor
             
-            # Insertamos estos valores en la tabla
             self.tree.insert("", "end", values=(venta_id, fecha, auto, cliente, vendedor))
-
 
     def initialize_registro(self):
         self.frame_registro = ctk.CTkFrame(self.ventana)
@@ -134,29 +131,26 @@ class AdministracionVenta:
         self.boton_registrar.grid(row=0, column=1, padx=10)
 
     def registrar_venta(self):
+        # Obtén el valor de la fecha desde el campo de entrada
+        fecha = self.entry_fecha.get()
         vin = self.entry_vin.get()
         cliente = self.entry_cliente.get()
         vendedor = self.entry_vendedor.get()
-        fecha = self.entry_fecha.get()
-        
-        # Validar que el auto y el cliente existan
-        auto = self.gestor_auto.obtener_auto(vin)
-        if auto is None:
-            print(f"Error: No se encontró un auto con el VIN '{vin}'.")
-            return
-        
-        cliente_obj = self.gestor_cliente.obtener_cliente(cliente)
-        if cliente_obj is None:
-            print(f"Error: No se encontró un cliente con el ID '{cliente}'.")
-            return
 
-        # Llamada al gestor para registrar la venta
+        if not fecha:
+            messagebox.showerror("Error", "La fecha no puede estar vacía.")
+            return
+        
         try:
-            self.gestor_venta.registrar_venta(vin, cliente, vendedor, fecha)
-            self.rellenar_tabla()  # Refrescar la tabla después de registrar la venta
-            print("Venta registrada con éxito.")
+            fecha_venta = datetime.strptime(fecha, "%d/%m/%Y").date()
+            self.gestor_venta.registrar_venta(cliente, vendedor, vin, fecha_venta)
+            self.rellenar_tabla()  # Refresca la tabla después de registrar la venta
+            messagebox.showinfo("Éxito", "Venta registrada con éxito.")
+            
+        except ValueError as e:
+            messagebox.showerror("Error en la fecha", f"Error en el formato de la fecha: {e}")
         except Exception as e:
-            print(f"Error al registrar la venta: {e}")
+            messagebox.showerror("Error", f"Error al registrar la venta: {e}")
 
     def listar_ventas(self):
         self.ventas = self.gestor_venta.listar_ventas()
@@ -168,7 +162,7 @@ class AdministracionVenta:
             mod_venta = ModificacionVenta(self, venta_seleccionada)
             mod_venta.show()
         else:
-            print("Por favor, seleccione una venta para modificar.")
+            messagebox.showinfo("Información", "Por favor, seleccione una venta para modificar.")
     
     def eliminar_venta(self):
         item = self.tree.selection()
@@ -176,11 +170,10 @@ class AdministracionVenta:
             venta_seleccionada = self.tree.item(item, "values")
             venta_id = venta_seleccionada[0]
             try:
-                # Llamar al método del gestor para eliminar la venta
                 self.gestor_venta.eliminar_venta(venta_id)
-                print("Venta eliminada con éxito.")
-                self.rellenar_tabla()  # Refrescar la tabla después de eliminar la venta
+                self.rellenar_tabla()
+                messagebox.showinfo("Éxito", "Venta eliminada con éxito.")
             except Exception as e:
-                print(f"Error al eliminar la venta: {e}")
+                messagebox.showerror("Error", f"Error al eliminar la venta: {e}")
         else:
-            print("Por favor, seleccione una venta para eliminar.")
+            messagebox.showinfo("Información", "Por favor, seleccione una venta para eliminar.")
