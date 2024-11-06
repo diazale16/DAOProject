@@ -49,7 +49,7 @@ class ModificacionAuto:
         self.entry_precio.grid(row=4, column=1, padx=10, pady=10)
         # Etiqueta y opción para el estado (nuevo/usado)
         self.label_estado = ctk.CTkLabel(self.frame_modif, text="Estado:").grid(row=5, column=0, padx=10, pady=10, sticky="w")
-        self.estado_var = ctk.StringVar(value=f"{self.auto.estado_relacion.nombre}")
+        self.estado_var = ctk.StringVar(value=f"{self.auto.estado.nombre}")
         self.radio_nuevo = ctk.CTkRadioButton(self.frame_modif, text="Nuevo", variable=self.estado_var, value="Nuevo").grid(row=5, column=1, padx=10, pady=10, sticky="w")
         self.radio_usado = ctk.CTkRadioButton(self.frame_modif, text="Usado", variable=self.estado_var, value="Usado").grid(row=5, column=1, padx=10, pady=10, sticky="e")
         # Etiqueta y entrada para el cliente (opcional)

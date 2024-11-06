@@ -14,9 +14,9 @@ class Cliente(Base):
     # direccion_id = Column(Integer, ForeignKey('direcciones.id'))
     
     # Relación con la entidad Dirección
-    # direccion_relacion = relationship('Direccion', back_populates='cliente_relacion')
-    auto_relacion = relationship('Auto', back_populates='cliente_relacion', lazy="joined")
-    venta_relacion = relationship('Venta', back_populates='cliente_relacion')
+    # direccion = relationship('Direccion', back_populates='cliente')
+    auto = relationship('Auto', back_populates='cliente', lazy="joined")
+    venta = relationship('Venta', back_populates='cliente', lazy="joined")
 
 
 

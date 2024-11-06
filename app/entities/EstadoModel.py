@@ -10,4 +10,4 @@ class Estado(Base):
     # descripcion = Column(Integer, nullable=False)
     
     # Relación inversa con la entidad Cliente
-    auto_relacion = relationship('Auto', back_populates='estado_relacion', lazy="joined")
+    auto = relationship('Auto', back_populates='estado', lazy="joined")

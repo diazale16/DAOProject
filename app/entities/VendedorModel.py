@@ -8,10 +8,10 @@ class Vendedor(Base):
     id = Column(String(10), primary_key=True, default=lambda: uuid.uuid4().hex[:10].upper())
     nombre = Column(String, nullable=False)
     apellido = Column(String, nullable=False)
-    comision = Column(Integer, nullable=False) # Porcentaje de comision asignado al vendedor para las ventas o servicios que logre
+    porc_comision = Column(Integer, nullable=False) # Porcentaje de comision asignado al vendedor para las ventas o servicios que logre
 
     # Relación con la entidad Venta
-    venta_relacion = relationship('Venta', back_populates='vendedor_relacion')
-    servicio_relacion = relationship('Servicio', back_populates='vendedor_relacion')
+    venta = relationship('Venta', back_populates='vendedor', lazy="joined")
+    servicio = relationship('Servicio', back_populates='vendedor', lazy="joined")
     # Relación con la entidad Comision (uno-a-muchos)
-    comision_relacion = relationship('Comision', back_populates='vendedor_relacion') # cascade="all, delete-orphan", lazy="joined"
+    comision = relationship('Comision', back_populates='vendedor', lazy="joined") # cascade="all, delete-orphan", lazy="joined"

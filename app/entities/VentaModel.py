@@ -16,6 +16,6 @@ class Venta(Base):
     monto = Column(Float, nullable=False)
 
     # Relación con la entidad Dirección
-    cliente_relacion = relationship('Cliente', back_populates='venta_relacion', lazy="joined")
-    auto_relacion = relationship('Auto', back_populates='venta_relacion', lazy="joined")
-    vendedor_relacion = relationship('Vendedor', back_populates='venta_relacion', lazy="joined")
+    cliente = relationship('Cliente', back_populates='venta', lazy="joined")
+    auto = relationship('Auto', back_populates='venta', lazy="joined")
+    vendedor = relationship('Vendedor', back_populates='venta', lazy="joined")
