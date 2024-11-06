@@ -16,7 +16,7 @@ class GestorServicio:
     def __init__(self):
         self.db_manager = DBManager()
 
-    def registrar_servicio(self, costo: float, auto_vin , tipo_servicio, vendedor_id: Vendedor, fecha=None):
+    def registrar_servicio(self, costo: float, auto_vin , tipo_servicio, vendedor_id, fecha=None):
         # vars
         if not fecha:
             fecha = datetime.today().date()  # formato fecha YYYY-MM-DD

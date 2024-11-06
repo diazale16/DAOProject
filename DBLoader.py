@@ -210,7 +210,7 @@ def main():
             # cliente_id = Column(String, ForeignKey('clientes.id'), nullable=False)
             # vendedor_id = Column(String, ForeignKey('vendedores.id'), nullable=False)
             # monto = Column(Float, nullable=False)
-            dia = random.randint(1,31)
+            dia = random.randint(1,28)
             mes = random.randint(1,12)
             año = random.randint(2023,2024)
             fecha = datetime.strptime(f"{dia}/{mes}/{año}", "%d/%m/%Y").date()
@@ -221,7 +221,7 @@ def main():
         if i%2 == 0:
             # Tipo Servicio
             nom_tipo_servicio = "Mantenimiento" if random.randint(0,1) == 0 else "Reparacion"
-            tipo_servicio = tipo_servicio_gestor.registrar_tipo_servicio(nombre=nom_tipo_servicio)
+            # tipo_servicio = tipo_servicio_gestor.registrar_tipo_servicio(nombre=nom_tipo_servicio)
             
             # Servicios
             dia = random.randint(1,28)
@@ -230,7 +230,7 @@ def main():
             fecha = datetime.strptime(f"{dia}/{mes}/{año}", "%d/%m/%Y").date()
             costo = random.randrange(100000,250000,1)
             auto:AutoModel.Auto = ventas[i].auto
-            servicio = servicio_gestor.registrar_servicio(costo=costo, auto=auto, tipo_servicio=tipo_servicio, vendedor=venta.vendedor, fecha=fecha)
+            servicio = servicio_gestor.registrar_servicio(costo=costo, auto_vin=auto.vin, tipo_servicio=nom_tipo_servicio, vendedor_id=venta.vendedor.id, fecha=f"{año}-{mes}-{dia}")
             print(servicio)
     
     ventas:list[VentaModel.Venta] = venta_gestor.listar_ventas()

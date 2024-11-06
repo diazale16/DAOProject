@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from tkinter import ttk
+from tkinter import messagebox, ttk
 from ...entities.AutoModel import Auto
 from ...control.GestorAuto import GestorAuto
 # from ..Home.Home import Home
@@ -175,6 +175,11 @@ class AdministracionAuto:
         self.precio = self.entry_precio.get()
         self.estado = self.estado_var.get()
         self.cliente = self.entry_cliente.get() if self.entry_cliente.get() else None
+        
+        # Validación de campos vacíos
+        if not self.vin or not self.marca or not self.modelo or not self.año or not self.precio or not self.estado:
+            messagebox.showwarning("Campos incompletos", "Por favor, complete todos los campos antes de registrar el cliente.")
+            return
         
         if self.vin in [auto.vin for auto in self.autos.values()]:
             self.mostrar_modal_confirmacion("Ya existe un auto con este VIN.")

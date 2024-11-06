@@ -9,6 +9,9 @@ class GestorAuto():
         self.db_manager = DBManager()
 
     def registrar_auto(self, vin, marca, modelo, año, precio, nom_estado, cliente=None):
+        auto = self.db_manager.get_by_id(entity_class=Auto, entity_id=vin)
+        if auto:
+            return
         # estado
         gestor_estado = GestorEstado.GestorEstado()
         estado = gestor_estado.registrar_estado(nombre_estado=nom_estado)
