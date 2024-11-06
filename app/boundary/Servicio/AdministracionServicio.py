@@ -20,9 +20,9 @@ class AdministracionServicio:
         self.ventana = ctk.CTkToplevel()
         self.gestor_vendedor = GestorVendedor()
         
-        self.ventana.geometry("1280x720")
+        self.ventana.geometry(f"1280x720")
         ctk.set_appearance_mode("dark")
-        self.ventana.state("zoomed")
+        self.ventana.attributes("-zoomed", True)
         
         self.header()
         self.initialize_consulta()
