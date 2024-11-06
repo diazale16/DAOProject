@@ -175,8 +175,16 @@ class AdministracionAuto:
         self.precio = self.entry_precio.get()
         self.estado = self.estado_var.get()
         self.cliente = self.entry_cliente.get() if self.entry_cliente.get() else None
-        self.gestor_auto.registrar_auto(vin=self.vin, marca=self.marca, modelo=self.modelo, año=self.año, precio=self.precio, nom_estado=self.estado, cliente=self.cliente)
-        self.rellenar_tabla()
+        
+        if self.vin in [auto.vin for auto in self.autos.values()]:
+            self.mostrar_modal_confirmacion("Ya existe un auto con este VIN.")
+            return
+        try:
+            self.gestor_auto.registrar_auto(vin=self.vin, marca=self.marca, modelo=self.modelo, año=self.año, precio=self.precio, nom_estado=self.estado, cliente=self.cliente)
+            self.rellenar_tabla()
+            self.mostrar_modal_confirmacion(f"El auto se registro correctamente.")
+        except Exception:
+            self.mostrar_modal_confirmacion(f"Error al registrar el auto.")
 
     def modificar_auto(self):
         mod_auto = ModificacionAuto.ModificacionAuto(self.ventana, self.auto_selecc) 
@@ -202,4 +210,17 @@ class AdministracionAuto:
                     tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado.nombre, auto.cliente_id)
                     # tupla = (auto.vin, auto.marca, auto.modelo, auto.año, auto.precio, auto.estado.nombre, f"{auto.cliente.nombre} {auto.cliente.apellido}", auto)
                 self.datos_autos.append(tupla)
+                
+    def mostrar_modal_confirmacion(self, mensaje):
+        self.modal = ctk.CTkToplevel(self.ventana)
+        self.modal.title("Regisro de venta")
+        self.modal.geometry("600x150")
+        self.modal.transient(self.ventana)
+        self.modal.update()
+        self.modal.grab_set()
+
+        label = ctk.CTkLabel(self.modal, text=mensaje)
+        label.pack(pady=20)
+        cerrar_btn = ctk.CTkButton(self.modal, text="Cerrar", command=self.modal.destroy)
+        cerrar_btn.pack(side="bottom", pady=10, padx=20, fill="x")
 

@@ -71,7 +71,7 @@ class Home:
         self.btn_reportes = ctk.CTkButton(
             self.ventana, 
             text="Reportes", 
-            command=self.adm_servicios,
+            command=self.reportes_opt,
             fg_color="#0b6ec0", 
             hover_color="#2d93e6", 
             text_color="#FFFFFF",
@@ -83,7 +83,7 @@ class Home:
         self.btn_salir = ctk.CTkButton(
             self.ventana, 
             text="Salir", 
-            command=self.adm_servicios,
+            command=self.salir,
             fg_color="#fd1212", 
             hover_color="#d24949", 
             text_color="#FFFFFF",
