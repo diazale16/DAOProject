@@ -163,4 +163,11 @@ class AdministracionVenta:
 
         self.rellenar_tabla()
 
-
+    def modificar_venta(self):
+        item = self.tree.selection()
+        if item:
+            venta_seleccionada = self.tree.item(item, "values")
+            mod_venta = ModificacionVenta(self, venta_seleccionada)
+            mod_venta.show()
+        else:
+            print("Por favor, seleccione una venta para modificar.")
