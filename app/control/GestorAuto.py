@@ -50,6 +50,9 @@ class GestorAuto():
 
     def listar_autos(self):
         return self.db_manager.get_all(entity_class=Auto)
+    
+    def listar_autos_no_vendidos(self):
+        return [auto for auto in self.db_manager.get_all(entity_class=Auto) if not auto.cliente]
 
     def asignar_cliente(self, vin, id):
         auto: Auto = self.db_manager.get_by_id(
