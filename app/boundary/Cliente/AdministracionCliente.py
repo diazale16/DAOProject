@@ -10,9 +10,9 @@ class AdministracionCliente:
         self.home_instance = home_instance
         self.ventana = ctk.CTkToplevel()
         
-        self.ventana.geometry("1280x720")  # Ajustar la geometría manualmente
+        self.ventana.geometry(f"1280x720")
         ctk.set_appearance_mode("dark")
-        self.ventana.state("zoomed")  # Maximizar la ventana sin usar -zoomed
+        self.ventana.attributes("-zoomed", True)
         
         self.header()
         self.initialize_consulta()

@@ -9,6 +9,8 @@ from ...control.GestorVenta import GestorVenta
 from ...control.GestorAuto import GestorAuto
 from ...control.GestorCliente import GestorCliente
 
+from . import RegistroVenta
+
 
 class AdministracionVenta:
     def __init__(self, home_instance):
@@ -20,11 +22,11 @@ class AdministracionVenta:
 
         self.ventana.geometry(f"1280x720")
         ctk.set_appearance_mode("dark")
-        self.ventana.attributes("-fullscreen", True)
+        self.ventana.attributes("-zoomed", True)
 
         self.header()
         self.initialize_consulta()
-        self.initialize_registro()
+        self.footer()
 
     def home(self):
         self.ventana.destroy()
@@ -64,8 +66,15 @@ class AdministracionVenta:
         self.tree.heading("Cliente", text="Cliente")
         self.tree.heading("Vendedor", text="Vendedor")
         self.tree.pack(side="top", fill="both", expand=True)
-
+        self.tree.bind("<<TreeviewSelect>>", self.seleccionar_item)
         self.rellenar_tabla()
+
+    def seleccionar_item(self, event):
+        item_selecc = self.tree.selection()
+        if item_selecc:
+            selection_data = self.tree.item(item_selecc, "values")
+            self.venta_selecc = self.ventas[selection_data[0]]
+        # self.footer()
 
     def rellenar_tabla(self):
         self.listar_ventas()
@@ -73,62 +82,30 @@ class AdministracionVenta:
         for venta in self.ventas_datos:
             self.tree.insert("", "end", values=venta)
 
-    def initialize_registro(self):
+    def footer(self):
         self.frame_registro = ctk.CTkFrame(self.ventana)
         self.frame_registro.pack(
-            side="left", fill="both", padx=10, pady=10, expand=True)
-
-        # Configuración de campos para el registro de una nueva venta
-        self.label_vin = ctk.CTkLabel(self.frame_registro, text="Código VIN:").grid(
-            row=0, column=0, padx=10, pady=10, sticky="w")
-        self.entry_vin = ctk.CTkEntry(self.frame_registro)
-        self.entry_vin.grid(row=0, column=1, padx=10, pady=10)
-
-        self.label_cliente = ctk.CTkLabel(self.frame_registro, text="ID Cliente:").grid(
-            row=1, column=0, padx=10, pady=10, sticky="w")
-        self.entry_cliente = ctk.CTkEntry(self.frame_registro)
-        self.entry_cliente.grid(row=1, column=1, padx=10, pady=10)
-
-        self.label_vendedor = ctk.CTkLabel(self.frame_registro, text="ID Vendedor:").grid(
-            row=2, column=0, padx=10, pady=10, sticky="w")
-        self.entry_vendedor = ctk.CTkEntry(self.frame_registro)
-        self.entry_vendedor.grid(row=2, column=1, padx=10, pady=10)
-
-        self.label_fecha = ctk.CTkLabel(self.frame_registro, text="Fecha:").grid(
-            row=3, column=0, padx=10, pady=10, sticky="w")
-        self.entry_fecha = ctk.CTkEntry(self.frame_registro)
-        self.entry_fecha.grid(row=3, column=1, padx=10, pady=10)
+            side="bottom", fill="x", padx=10, pady=10, expand=True)
 
         # Botón para registrar una nueva venta
         self.boton_registrar = ctk.CTkButton(
             self.frame_registro, text="Registrar Venta", command=self.registrar_venta)
-        self.boton_registrar.grid(
-            row=4, column=0, columnspan=2, padx=10, pady=20)
+        self.boton_registrar.pack(side="left", fill="y")
+        
+        # Botón para eliminar una venta
+        self.boton_eliminar = ctk.CTkButton(
+            self.frame_registro, text="Eliminar Venta", command=self.eliminar_venta)
+        self.boton_eliminar.pack(side="right", fill="y")
 
     def registrar_venta(self):
-        vin = self.entry_vin.get()
-        cliente = self.entry_cliente.get()
-        vendedor = self.entry_vendedor.get()
-        fecha = self.entry_fecha.get()
+        reg_venta = RegistroVenta.RegistroVenta(self)
+        self.ventana.withdraw()
+        reg_venta.show()
 
-        # Validar que el auto y el cliente existan
-        auto = self.gestor_auto.obtener_auto(vin)
-        if auto is None:
-            print(f"Error: No se encontró un auto con el VIN '{vin}'.")
-            return
-
-        cliente_obj = self.gestor_cliente.obtener_cliente(cliente)
-        if cliente_obj is None:
-            print(f"Error: No se encontró un cliente con el ID '{cliente}'.")
-            return
-
-        # Llamada al gestor para registrar la venta
-        try:
-            self.gestor_venta.registrar_venta(vin, cliente, vendedor, fecha)
-            self.rellenar_tabla()  # Refrescar la tabla después de registrar la venta
-            print("Venta registrada con éxito.")
-        except Exception as e:
-            print(f"Error al registrar la venta: {e}")
+    def eliminar_venta(self):
+        if self.venta_selecc:
+            self.gestor_venta.eliminar_venta(id=self.venta_selecc.id)
+            self.rellenar_tabla()
 
     def listar_ventas(self):
         data: list[Venta] = self.gestor_venta.listar_ventas()
@@ -138,29 +115,4 @@ class AdministracionVenta:
             if isinstance(venta, Venta):
                 self.ventas_datos.append((venta.id,  venta.fecha, f"{venta.auto.marca} {venta.auto.modelo} {venta.auto.año}",
                                          f"{venta.cliente.nombre} {venta.cliente.apellido}", f"{venta.vendedor.nombre} {venta.vendedor.apellido} ({venta.vendedor_id})"))
-
-    def initialize_consulta(self):
-        self.frame_lista = ctk.CTkFrame(self.ventana)
-        self.frame_lista.pack(side="top", fill="both",
-                              padx=10, pady=10, expand=True)
-
-        # Configuración de la tabla de ventas
-        self.tree = ttk.Treeview(
-            self.frame_lista,
-            columns=("ID", "Fecha", "Auto", "Cliente", "Vendedor"),
-            show="headings",
-        )
-        self.tree.heading("ID", text="ID")
-        self.tree.heading("Fecha", text="Fecha")
-        self.tree.heading("Auto", text="Auto")
-        self.tree.heading("Cliente", text="Cliente")
-        self.tree.heading("Vendedor", text="Vendedor")
-        self.tree.pack(side="top", fill="both", expand=True)
-
-        self.boton_modificar = ctk.CTkButton(
-            self.frame_lista, text="Modificar Venta", command=self.modificar_venta)
-        self.boton_modificar.pack(side="bottom", fill="x", padx=10, pady=10)
-
-        self.rellenar_tabla()
-
 
