@@ -2,7 +2,7 @@
 
 import customtkinter as ctk
 from tkcalendar import DateEntry
-from tkinter import ttk
+from tkinter import messagebox, ttk
 from ...control.GestorServicio import GestorServicio
 from ...control.GestorAuto import GestorAuto
 from ...control.GestorTipoServicio import GestorTipoServicio
@@ -145,6 +145,12 @@ class AdministracionServicio:
         tipo_servicio = self.entry_tipo_servicio.get()
         costo = float(self.entry_costo.get())
         vendedor = self.entry_vendedor.get()
+
+        if not fecha or not auto_vin or not tipo_servicio or not costo or not vendedor:
+            messagebox.showwarning(
+                "Campos incompletos", "Por favor, complete todos los campos antes de registrar el cliente.")
+            return
+
         print(f"Registrando servicio con costo: {costo}")        
 
         self.gestor_servicio.registrar_servicio(costo, auto_vin, tipo_servicio, vendedor, fecha)

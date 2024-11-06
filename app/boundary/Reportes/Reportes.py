@@ -1,3 +1,4 @@
+from tkinter import messagebox
 import customtkinter as ctk
 from ...reports import ReporteIngresosTotales, ReporteVentasAutos, ReporteVentasPeriodo
 
@@ -95,6 +96,12 @@ class Reportes:
         mes_hasta = self.mes_hasta.get()
         ano_hasta = self.ano_hasta.get()
         self.modal.destroy()
+        
+        if not dia_desde or not mes_desde or not ano_desde or not dia_desde or not mes_hasta or not ano_hasta:
+            messagebox.showwarning(
+                "Campos incompletos", "Por favor, complete todos los campos antes de registrar el cliente.")
+            return
+        
         try:
             fecha_desde = f"{dia_desde}/{mes_desde}/{ano_desde}"
             fecha_hasta = f"{dia_hasta}/{mes_hasta}/{ano_hasta}"
