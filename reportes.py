@@ -8,8 +8,8 @@ from datetime import datetime
 fecha_desde = "1/1/2024"
 fecha_hasta = "11/11/2024"
 
-fecha_desde = datetime.strptime(fecha_desde, "%d/%m/%Y").date()
-fecha_hasta = datetime.strptime(fecha_hasta, "%d/%m/%Y").date()
+# fecha_desde = datetime.strptime(fecha_desde, "%d/%m/%Y").date()
+# fecha_hasta = datetime.strptime(fecha_hasta, "%d/%m/%Y").date()
 
 reporte = ReporteVentasPeriodo(fecha_desde=fecha_desde, fecha_hasta=fecha_hasta)
 reporte.generar_reporte()

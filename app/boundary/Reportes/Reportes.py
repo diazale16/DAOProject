@@ -105,6 +105,7 @@ class Reportes:
                 f"Reporte generado exitosamente. \n Visible en: '{rp_location}'")
         except Exception:
             self.mostrar_modal_confirmacion("Error al generar el reporte.")
+            print(Exception)
 
     def rp_ingresos(self):
         try:
@@ -114,6 +115,8 @@ class Reportes:
                 f"Reporte generado exitosamente. \n Visible en: '{rp_location}'")
         except Exception:
             self.mostrar_modal_confirmacion("Error al generar el reporte.")
+            print(Exception)
+            
 
     def rp_ventas_autos_marca(self):
         try:
@@ -123,6 +126,8 @@ class Reportes:
                 f"Reporte generado exitosamente. \n Visible en: '{rp_location}'")
         except Exception:
             self.mostrar_modal_confirmacion("Error al generar el reporte.")
+            print(Exception)
+            
 
     def mostrar_modal_confirmacion(self, mensaje):
         self.modal = ctk.CTkToplevel(self.ventana)
