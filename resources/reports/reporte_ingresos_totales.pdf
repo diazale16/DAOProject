@@ -17,7 +17,7 @@ endobj
 endobj
 4 0 obj
 <<
-/Contents 12 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 11 0 R /Resources <<
+/Contents 8 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 7 0 R /Resources <<
 /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
 >> /Rotate 0 /Trans <<
 
@@ -27,6 +27,7 @@ endobj
 endobj
 5 0 obj
 <<
+<<<<<<< HEAD
 /BitsPerComponent 8 /ColorSpace /DeviceRGB /Filter [ /ASCII85Decode /FlateDecode ] /Height 300 /Length 13366 /SMask 6 0 R 
   /Subtype /Image /Type /XObject /Width 600
 >>
@@ -69,16 +70,25 @@ endobj
 10 0 obj
 <<
 /Author (\(anonymous\)) /CreationDate (D:20241106140558+00'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20241106140558+00'00') /Producer (ReportLab PDF Library - www.reportlab.com) 
+=======
+/PageMode /UseNone /Pages 7 0 R /Type /Catalog
+>>
+endobj
+6 0 obj
+<<
+/Author (\(anonymous\)) /CreationDate (D:20241103193936-03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20241103193936-03'00') /Producer (ReportLab PDF Library - www.reportlab.com) 
+>>>>>>> refactor-servicio-screen
   /Subject (\(unspecified\)) /Title (\(anonymous\)) /Trapped /False
 >>
 endobj
-11 0 obj
+7 0 obj
 <<
-/Count 2 /Kids [ 4 0 R 8 0 R ] /Type /Pages
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
 >>
 endobj
-12 0 obj
+8 0 obj
 <<
+<<<<<<< HEAD
 /Filter [ /ASCII85Decode /FlateDecode ] /Length 721
 >>
 stream
@@ -90,14 +100,21 @@ endobj
 >>
 stream
 Gasag]+2\3%,CFhrW1I"Gr[C,:+VYcYU3)M<>GH35c?/tT`[L#-eW.i+fGn+qRcf5,7Gdu'#XufUk/;kHPA,a]CJ9d4!J7P3%^O#pVX^h8o4pKEutnPqHfb/QL+0Y'Ui3J8]__1.C[7f-1mnHD&$!iiSk`64l/u4!RUfbTQ7'$FLQ"BCbD`Se]IX6;J&$%JEAcjL_#cN6@o~>endstream
+=======
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 672
+>>
+stream
+Gat$t9lJc?%)(h*nCSJ[.dC5"DHI,P]<jG=fllj_204o4RI,1M^E4bO`(?/7K+X"b+5\:l)M-@il+PjP]Z]:!)?C$&%tKNda?RRtI.;!'"4B67$CPtl;$I2K$8edejl/ZuM&W0%J1a_+&W)S^%2qb,r#RJ._mXHo!;?Mc6e)q=)os*E^P$DF8GY:;m+3BP<5V#CGl8`GWRRo*j]u,Hjj,-:'/jE+IZm6%DrE3c$!2XJ0>W?omphd+l8$r).P?$e)Db1KBf>QsPguc?D;E(;WG++6%4ANp0h&-fl6uW:g<_sKb;*Pm[`]9`[RF-1RXEW)VJb)?JrMoS89CF@8H:?]X<XT&H@p0];NFi%P8XQBaFo6o^r,8cH,Ha_E-RBLh";!$kVM?g933s>&p5lIV<#iNMPPf0]J$k#Wgg;][6"Jck)=(=_=P5gehcO(/=r&J9MqEg-_;u<X*^f0)9E=YIN0UZZN@4&R(MlPcOp`G;hW5nd@gH@:T-T]T;<OS-Rb6'N!=tB"Bh&,.5pj[8.kTV[RKnV=3"+>Y/:"S#P>"83CD0"Y(&9(YI4=\07Etpkk@&Q`9g(ko6]3Z9j6.^Xl1mXq;C:[*^7L6d?g8@k6EYCUXtQ'^LO&Cl$[*$5-5#2)5Bur_+2M@15Ur.;([[DF0+OO4g=\hfW&.4~>endstream
+>>>>>>> refactor-servicio-screen
 endobj
 xref
-0 14
+0 9
 0000000000 65535 f 
 0000000073 00000 n 
 0000000114 00000 n 
 0000000221 00000 n 
 0000000333 00000 n 
+<<<<<<< HEAD
 0000000538 00000 n 
 0000014109 00000 n 
 0000014396 00000 n 
@@ -111,12 +128,26 @@ trailer
 <<
 /ID 
 [<5c773bdf6c8021038d01bafcb2d32cf1><5c773bdf6c8021038d01bafcb2d32cf1>]
+=======
+0000000536 00000 n 
+0000000604 00000 n 
+0000000887 00000 n 
+0000000946 00000 n 
+trailer
+<<
+/ID 
+[<62d2fada5ce75eb8350baa730e396b79><62d2fada5ce75eb8350baa730e396b79>]
+>>>>>>> refactor-servicio-screen
 % ReportLab generated PDF document -- digest (http://www.reportlab.com)
 
-/Info 10 0 R
-/Root 9 0 R
-/Size 14
+/Info 6 0 R
+/Root 5 0 R
+/Size 9
 >>
 startxref
+<<<<<<< HEAD
 30400
+=======
+1708
+>>>>>>> refactor-servicio-screen
 %%EOF

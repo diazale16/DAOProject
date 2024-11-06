@@ -13,7 +13,7 @@ class Home:
         self.ventana = ctk.CTk()
         self.ventana.geometry(f"1280x720")
         ctk.set_appearance_mode("dark")
-        self.ventana.attributes("-zoomed", True)
+        self.ventana.attributes("-fullscreen", True)
         self.ventana.bind("<Escape>", self.salir_fullscreen)
         self.ventana.protocol("WM_DELETE_WINDOW", self.salir)
         

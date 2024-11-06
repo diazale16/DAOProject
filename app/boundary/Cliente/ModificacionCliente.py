@@ -35,17 +35,22 @@ class ModificacionCliente:
         # Campos para la dirección
         self.label_calle = ctk.CTkLabel(self.frame_modif, text="Calle:").grid(row=3, column=0, padx=10, pady=10, sticky="w")
         self.entry_calle = ctk.CTkEntry(self.frame_modif)
-        self.entry_calle.insert(0, self.data[3])
+        self.entry_calle.insert(0, self.data[3].split(',')[0])
         self.entry_calle.grid(row=3, column=1, padx=10, pady=10)
 
         self.label_numero = ctk.CTkLabel(self.frame_modif, text="Número:").grid(row=4, column=0, padx=10, pady=10, sticky="w")
         self.entry_numero = ctk.CTkEntry(self.frame_modif)
-        self.entry_numero.insert(0, self.data[3])
+        self.entry_numero.insert(0, self.data[3].split(',')[1])
         self.entry_numero.grid(row=4, column=1, padx=10, pady=10)
 
         self.label_localidad = ctk.CTkLabel(self.frame_modif, text="Localidad:").grid(row=5, column=0, padx=10, pady=10, sticky="w")
         self.entry_localidad = ctk.CTkEntry(self.frame_modif)
-        self.entry_localidad.insert(0, self.data[3])
+        longitud = len(self.data[3].split(','))
+        if(longitud > 2):
+            self.entry_localidad.insert(0, self.data[3].split(',')[2])
+        else:
+           self.entry_localidad.insert(0, '')
+         #agregar metodo split
         self.entry_localidad.grid(row=5, column=1, padx=10, pady=10)
 
         # Etiqueta y entrada para el telefono
