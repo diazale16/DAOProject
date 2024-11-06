@@ -20,12 +20,78 @@ class Home:
         self.initialize_widgets()
         
     def initialize_widgets(self):
-        self.adm_autos = ctk.CTkButton(self.ventana, text="Administrar Auto", command=self.adm_autos).pack(side="top", fill="x", padx=200, pady=20)
-        self.adm_clientes = ctk.CTkButton(self.ventana, text="Administrar Clientes", command=self.adm_clientes).pack(side="top", fill="x", padx=200, pady=20)
-        self.adm_ventas = ctk.CTkButton(self.ventana, text="Administrar Ventas", command=self.adm_ventas).pack(side="top", fill="x", padx=200, pady=20)
-        self.adm_servicios = ctk.CTkButton(self.ventana, text="Administrar Servicios", command=self.adm_servicios).pack(side="top", fill="x", padx=200, pady=20)
-        self.boton_salir = ctk.CTkButton(self.ventana, text="Salir", command=self.salir, fg_color="red").pack(side="bottom", fill="x", padx=200, pady=20)
-        self.reportes = ctk.CTkButton(self.ventana, text="Reportes", command=self.reportes_opt).pack(side="bottom", fill="x", padx=200, pady=20)
+        self.btn_adm_autos = ctk.CTkButton(
+            self.ventana, 
+            text="Administrar Autos", 
+            command=self.adm_autos,
+            fg_color="#4CAF50", 
+            hover_color="#388E3C", 
+            text_color="#FFFFFF",
+            height=50,
+            width=50,
+            corner_radius=15
+        )
+        self.btn_adm_autos.pack(side="top", pady=(80, 20), padx=600, fill="x")
+        self.btn_adm_clientes = ctk.CTkButton(
+            self.ventana, 
+            text="Administrar Clientes", 
+            command=self.adm_clientes,
+            fg_color="#4CAF50", 
+            hover_color="#388E3C", 
+            text_color="#FFFFFF",
+            height=50,
+            width=50,
+            corner_radius=15
+        )
+        self.btn_adm_clientes.pack(side="top", pady=(80, 20), padx=600, fill="x")
+        self.btn_adm_ventas = ctk.CTkButton(
+            self.ventana, 
+            text="Administrar Ventas", 
+            command=self.adm_ventas,
+            fg_color="#4CAF50", 
+            hover_color="#388E3C", 
+            text_color="#FFFFFF",
+            height=50,
+            width=50,
+            corner_radius=15
+        )
+        self.btn_adm_ventas.pack(side="top", pady=(80, 20), padx=600, fill="x")
+        self.btn_adm_servicios = ctk.CTkButton(
+            self.ventana, 
+            text="Administrar Serivico", 
+            command=self.adm_servicios,
+            fg_color="#4CAF50", 
+            hover_color="#388E3C", 
+            text_color="#FFFFFF",
+            height=50,
+            width=50,
+            corner_radius=15
+        )
+        self.btn_adm_servicios.pack(side="top", pady=(80, 20), padx=600, fill="x")
+        self.btn_reportes = ctk.CTkButton(
+            self.ventana, 
+            text="Reportes", 
+            command=self.adm_servicios,
+            fg_color="#0b6ec0", 
+            hover_color="#2d93e6", 
+            text_color="#FFFFFF",
+            height=50,
+            width=50,
+            corner_radius=15
+        )
+        self.btn_reportes.pack(side="top", pady=(80, 20), padx=600, fill="x")
+        self.btn_salir = ctk.CTkButton(
+            self.ventana, 
+            text="Salir", 
+            command=self.adm_servicios,
+            fg_color="#fd1212", 
+            hover_color="#d24949", 
+            text_color="#FFFFFF",
+            height=50,
+            width=50,
+            corner_radius=15
+        )
+        self.btn_salir.pack(side="top", pady=(80, 20), padx=600, fill="x")
     
     def show_home(self):
         self.ventana.mainloop()

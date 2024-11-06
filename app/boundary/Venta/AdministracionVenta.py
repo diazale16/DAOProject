@@ -23,8 +23,10 @@ class AdministracionVenta:
         self.ventana.geometry(f"1280x720")
         ctk.set_appearance_mode("dark")
         self.ventana.attributes("-zoomed", True)
+        self.selected_client = None
 
         self.header()
+        self.search()
         self.initialize_consulta()
         self.footer()
 
@@ -48,6 +50,39 @@ class AdministracionVenta:
         self.boton_refrescar = ctk.CTkButton(
             line1_frame, text="Refrescar", command=self.rellenar_tabla)
         self.boton_refrescar.pack(side="right", fill="y")
+        
+    def search(self):
+        line2_frame = ctk.CTkFrame(self.ventana)
+        line2_frame.pack(side="top", fill="x", pady=5)
+        self.listar_clientes()
+
+        # Botón para volver a la pantalla principal
+        self.dropdown_var = ctk.StringVar()
+        self.dropdown = ctk.CTkOptionMenu(line2_frame, variable=self.dropdown_var, values=self.options, command=self.on_selection)
+        self.dropdown.pack(side="left", fill="x", padx=10,pady=10)
+        
+        self.btn_reset = ctk.CTkButton(
+            line2_frame, text="Resetear", command=self.reset_search)
+        self.btn_reset.pack(side="right", fill="y", padx=10,pady=10)
+        
+        self.btn_search = ctk.CTkButton(
+            line2_frame, text="Buscar", command=self.do_search)
+        self.btn_search.pack(side="right", fill="y", padx=10,pady=10)
+
+    def reset_search(self):
+        self.selected_client = None
+        self.dropdown_var = ctk.StringVar()
+        self.rellenar_tabla()
+        
+    def do_search(self):
+        self.rellenar_tabla(self.selected_client)
+
+    def on_selection(self, event):
+        selected_cliente = self.dropdown_var.get()
+        print(selected_cliente.split("|")[0])
+        cliente = next((c for c in self.clientes if c.id == (selected_cliente.split("|")[0]).strip()), None)
+        if cliente:
+            self.selected_client = cliente
 
     def initialize_consulta(self):
         self.frame_lista = ctk.CTkFrame(self.ventana)
@@ -76,11 +111,14 @@ class AdministracionVenta:
             self.venta_selecc = self.ventas[selection_data[0]]
         # self.footer()
 
-    def rellenar_tabla(self):
-        self.listar_ventas()
+    def rellenar_tabla(self, cliente:Cliente = None):
+        if cliente:
+            self.listar_ventas(cliente)
+        else:
+            self.listar_ventas()
         self.tree.delete(*self.tree.get_children())
         for venta in self.ventas_datos:
-            self.tree.insert("", "end", values=venta)
+                self.tree.insert("", "end", values=venta)
 
     def footer(self):
         self.frame_registro = ctk.CTkFrame(self.ventana)
@@ -107,12 +145,19 @@ class AdministracionVenta:
             self.gestor_venta.eliminar_venta(id=self.venta_selecc.id)
             self.rellenar_tabla()
 
-    def listar_ventas(self):
+    def listar_ventas(self, cliente: Cliente = None):
         data: list[Venta] = self.gestor_venta.listar_ventas()
-        self.ventas = {venta.id: venta for venta in data}
+        if cliente:
+            self.ventas = {venta.id: venta for venta in data if venta.cliente_id == cliente.id}
+        else:
+            self.ventas = {venta.id: venta for venta in data}
         self.ventas_datos = []
         for venta in self.ventas.values():
             if isinstance(venta, Venta):
                 self.ventas_datos.append((venta.id,  venta.fecha, f"{venta.auto.marca} {venta.auto.modelo} {venta.auto.año}",
                                          f"{venta.cliente.nombre} {venta.cliente.apellido}", f"{venta.vendedor.nombre} {venta.vendedor.apellido} ({venta.vendedor_id})"))
-
+                
+    def listar_clientes(self):
+        self.clientes: list[Cliente] = self.gestor_cliente.listar_clientes()
+        self.options = [f"{cliente.id} | {cliente.nombre} {cliente.apellido}" for cliente in self.clientes]
+        
