@@ -4,11 +4,11 @@ from ...reports import ReporteIngresosTotales, ReporteVentasAutos, ReporteVentas
 
 class Reportes:
     def __init__(self, home_instance):
-        ctk.set_appearance_mode("dark")
         self.ventana = ctk.CTk()
         self.home_instance = home_instance
         self.ventana.geometry(f"1280x720")
-        self.ventana.attributes("-fullscreen", True)
+        ctk.set_appearance_mode("dark")
+        self.ventana.attributes("-zoomed", True)
         self.ventana.bind("<Escape>", self.salir_fullscreen)
         self.ventana.protocol("WM_DELETE_WINDOW", self.home)
         self.header()
