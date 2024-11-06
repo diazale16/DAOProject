@@ -14,7 +14,7 @@ class AdministracionAuto:
         
         self.ventana.geometry(f"1280x720")
         ctk.set_appearance_mode("dark")
-        self.ventana.attributes("-fullscreen", True)
+        self.ventana.attributes("-zoomed", True)
         self.header()
         self.initialize_consulta()
         self.initialize_alta()
@@ -112,7 +112,7 @@ class AdministracionAuto:
         self.radio_usado = ctk.CTkRadioButton(
             self.frame_alta, text="Usado", variable=self.estado_var, value="Usado"
         )
-        self.radio_usado.grid(row=2, column=5, padx=10, pady=10, sticky="e")
+        self.radio_usado.grid(row=2, column=6, padx=10, pady=10, sticky="e")
 
         self.label_cliente = ctk.CTkLabel(
             self.frame_alta, text="Cliente ID (opcional):"
@@ -187,7 +187,7 @@ class AdministracionAuto:
         # print(self.auto_selecc)
 
     def eliminar_auto(self):
-        self.gestor_auto.eliminar_auto(self.auto_selecc[0])
+        self.gestor_auto.eliminar_auto(self.auto_selecc.vin)
         self.rellenar_tabla()
     
     def listar_autos(self):
