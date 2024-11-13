@@ -1,7 +1,6 @@
 # control/GestorVendedor.py
 from ..persistency.DBManager import DBManager
 from ..entities.VendedorModel import Vendedor
-from ..entities.ComisionModel import Comision
 
 
 class GestorVendedor:

@@ -2,7 +2,6 @@ import customtkinter as ctk
 from tkinter import messagebox, ttk
 from ...entities.AutoModel import Auto
 from ...control.GestorAuto import GestorAuto
-# from ..Home.Home import Home
 from . import ModificacionAuto
 
 

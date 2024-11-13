@@ -1,5 +1,4 @@
 import customtkinter as ctk
-from tkinter import ttk
 from ...control.GestorCliente import GestorCliente
 
 class ModificacionCliente:

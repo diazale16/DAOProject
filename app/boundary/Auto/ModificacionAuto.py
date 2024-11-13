@@ -1,5 +1,4 @@
 import customtkinter as ctk
-from tkinter import ttk
 from ...entities.AutoModel import Auto
 from ...control.GestorAuto import GestorAuto
 

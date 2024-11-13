@@ -7,7 +7,7 @@ Base = declarative_base()
 class DBManager:
     _instance = None
 
-    def __new__(cls, db_name='dev.db', db_folder='databases'):
+    def __new__(cls, db_name='production.db', db_folder='databases'):
         if cls._instance is None:
             cls._instance = super(DBManager, cls).__new__(cls)
             cls._instance.initialize(db_name, db_folder)

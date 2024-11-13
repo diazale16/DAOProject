@@ -1,6 +1,4 @@
 import customtkinter as ctk
-from tkinter import ttk
-from ...control import GestorAuto
 from ..Auto.AdministracionAuto import AdministracionAuto
 from ..Venta.AdministracionVenta import AdministracionVenta
 from ..Cliente.AdministracionCliente import AdministracionCliente

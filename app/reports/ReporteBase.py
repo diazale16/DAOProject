@@ -1,27 +1,8 @@
 from abc import ABC, abstractmethod
-from ..control import GestorVenta, GestorServicio, GestorComision
-from ..entities.VentaModel import Venta
-from ..entities.ServicioModel import Servicio
-from ..entities.ComisionModel import Comision
-from ..entities.VentaModel import Venta
 from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
-from datetime import datetime
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
-from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.platypus.tables import Table, TableStyle
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.graphics import renderPDF
-from reportlab.platypus import Flowable
-from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
-from reportlab.graphics import renderPM
-from reportlab.graphics.shapes import Drawing
-from reportlab.graphics.charts.barcharts import VerticalBarChart
-from reportlab.lib import colors
-from io import BytesIO
+
 
 
 

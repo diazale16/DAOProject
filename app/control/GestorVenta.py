@@ -6,8 +6,6 @@ from ..entities.VentaModel import Venta
 from ..entities.AutoModel import Auto
 from ..entities.ClienteModel import Cliente
 from ..entities.VendedorModel import Vendedor
-from ..entities.ComisionModel import Comision
-from sqlalchemy import Date
 
 
 class GestorVenta():

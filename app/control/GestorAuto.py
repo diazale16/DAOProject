@@ -1,5 +1,5 @@
 from ..persistency.DBManager import DBManager
-from . import GestorEstado, GestorCliente, GestorVenta
+from . import GestorEstado, GestorCliente
 from ..entities.AutoModel import Auto
 from ..entities.ClienteModel import Cliente
 
@@ -10,14 +10,20 @@ class GestorAuto():
 
     def registrar_auto(self, vin, marca, modelo, año, precio, nom_estado, cliente=None):
         auto = self.db_manager.get_by_id(entity_class=Auto, entity_id=vin)
+        # no crea el auto si ya existe uno con el mismo vin
         if auto:
             return
+        
         # estado
         gestor_estado = GestorEstado.GestorEstado()
         estado = gestor_estado.registrar_estado(nombre_estado=nom_estado)
+        # cliente
+        gestor_cliente = GestorCliente.GestorCliente()
+        cliente:Cliente = gestor_cliente.obtener_cliente(id=cliente)
+        id_cliente = cliente.id if cliente else None
         # auto
         auto = Auto(vin=vin, marca=marca, modelo=modelo, año=año,
-                    precio=precio, estado_id=estado.id, cliente_id=cliente)
+                    precio=precio, estado_id=estado.id, cliente_id=id_cliente)
         self.db_manager.register(entity=auto)
         return auto
 

@@ -3,7 +3,6 @@ from tkinter import ttk
 from ...entities.AutoModel import Auto
 from ...entities.ClienteModel import Cliente
 from ...entities.VendedorModel import Vendedor
-from ...entities.VentaModel import Venta
 
 from ...control.GestorVenta import GestorVenta
 from ...control.GestorVendedor import GestorVendedor
